@@ -243,6 +243,38 @@ const addAddress = async(req,res)=>{
     console.log(error.message)
   }
 }
+/* ========================Edit Address ======================== */
+const editAddress = async (req, res) => {
+  console.log("ivdeeeeeeeeeee");
+
+  const id = req.body.id;
+  const name = req.body.name;
+  const address = req.body.address;
+  const locality = req.body.locality;
+  const city = req.body.city;
+  const pincode = req.body.pincode;
+  const state = req.body.state;
+  const mobileNumber = req.body.mobileNumber;
+
+  console.log(id)
+
+  // const update = await Address.updateOne(
+  //   { "address._id": id }, // Match the document with the given ID
+  //   {
+  //     $set: {
+  //       "addresses.$.name": name,
+  //       "addresses.$.address": address,
+  //       "addresses.$.locality": locality,
+  //       "addresses.$.city": city,
+  //       "addresses.$.pincode": pincode,
+  //       "addresses.$.state": state,
+  //       "addresses.$.mobileNumber": mobileNumber,
+  //     },
+  //   }
+  // );
+
+  res.redirect("/userAddress");
+};
 
 /* ========================Delete Address ======================== */
 
@@ -412,6 +444,7 @@ module.exports = {
   forgetPasswordLoad,
   resetPassword,
   couponLoad,
-  LoadVerifyOtp
+  LoadVerifyOtp,
+  editAddress
 
 };

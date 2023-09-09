@@ -6,10 +6,6 @@ function validateField(input, fieldName) {
     if (fieldValue === "") {
         errorMessage.textContent = fieldName.charAt(0).toUpperCase() + fieldName.slice(1) + " must not be empty.";
     } 
-    else if(!/^[a-zA-Z\s]+$/.test(fieldValue)){
-        
-        errorMessage.textContent = "Name should contain only letters.";
-    }
     else {
         errorMessage.textContent = "";
     }

@@ -1,7 +1,5 @@
 const User = require("../models/userModel");
-
 const bcrypt = require("bcryptjs");
-
 const Order = require("../models/orderModel");
 const userHelper=require('../helpers/userHelper')
 const mongoose = require('mongoose');
@@ -19,6 +17,7 @@ const securePassword =async (password) => {
     console.log(error.message);
   }
 }
+
 
 
 const editInfo = async (req, res) => {
@@ -270,7 +269,8 @@ module.exports={
   acceptReturn,
   declineReturn,
   cancelOrder,
-  loadOrderSlip
+  loadOrderSlip,
+
 
 }
 

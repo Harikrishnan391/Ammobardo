@@ -344,12 +344,15 @@ changinguserPassword:async(req,res)=>{
   loadingIndexPage: async (req, res) => {
     try {
 
+
+
       var search='';
         
       if(req.query.search){
           search=req.query.search
 
       }
+      const Banners = await banner.find();
 
       const products = await Product.find({
        
@@ -360,7 +363,7 @@ changinguserPassword:async(req,res)=>{
         ]
       });
 
-      res.render("index", { products: products });
+      res.render("index", { products: products,Banners:Banners});
     } catch (error) {
       console.log(error.message);
       res.redirect('/user-error')
@@ -460,7 +463,7 @@ changinguserPassword:async(req,res)=>{
       }
 
       await userAddress.save();
-      res.redirect("/myAccount");
+      res.redirect("/userAddress");
     } catch (error) {
       console.log(error.message);
     }
@@ -477,7 +480,7 @@ changinguserPassword:async(req,res)=>{
         { user_id: userId },
         { $pull: { address: { _id: id } } }
       );
-      res.redirect("/myAccount");
+      res.redirect("/userAddress");
     } catch (error) {
       console.log(error.message);
     }

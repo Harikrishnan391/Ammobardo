@@ -4,18 +4,17 @@
   const User = require('../models/userModel');
   require('dotenv').config();
 
-  const accountSid= config.twilioAccountSid;
-  const verifyServiceSid=config.verifyServiceSid
-  const authToken= config.twilioAuthToken;
-  const client =twilio(accountSid,authToken)
-
-  // const accountSid= process.env.ACCOUNT_SID;
-  // const verifyServiceSid=process.env.VERIFY_SID;
-  // const authToken=  process.env.AUTH_TOCKEN;
+  // const accountSid= config.twilioAccountSid;
+  // const verifyServiceSid=config.verifyServiceSid
+  // const authToken= config.twilioAuthToken;
   // const client =twilio(accountSid,authToken)
 
+  const accountSid= process.env.ACCOUNT_SID;
+  const verifyServiceSid=process.env.VERIFY_SID;
+  const authToken=  process.env.AUTH_TOKEN;
+  const client =twilio(accountSid,authToken)
+
   const sendOTP=async(phoneNumber)=>{
-    console.log(phoneNumber)
       try {
 
         await client.verify.v2.services(verifyServiceSid).verifications.create({
@@ -23,7 +22,7 @@
           to:phoneNumber,
           channel:'sms'
         })
-         
+         console.log("otp sended")
       } catch (error) {
         
         console.log(error.message)
@@ -37,13 +36,14 @@
 
 
   const verifyOTP=async(req,res)=>{
-
-
     try {
 
+      console.log('Verification start')
       const  userData= await User.findOne({_id:req.session.user_id})
       const userMobile=userData.mobile
       const otp=req.body.otp
+      console.log("check ",userMobile,otp)
+
    
       client.verify.v2.services(verifyServiceSid).verificationChecks.create({to:userMobile,code:otp})
       .then(async(verification_check)=>{

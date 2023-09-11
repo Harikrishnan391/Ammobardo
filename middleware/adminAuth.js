@@ -3,7 +3,9 @@ const { ReturnDocument } = require("mongodb")
 const isLogin=async(req,res,next)=>{
     try {
 
-        if(req.session.user_id){}
+        if(req.session.admin){
+            
+        }
         else{
 
            return res.redirect('/admin')
@@ -22,7 +24,7 @@ const isLogout= async(req,res,next)=>{
 
         try {
 
-            if(req.session.user_id){
+            if(req.session.admin){
 
             return res.redirect('/admin/home')
             }

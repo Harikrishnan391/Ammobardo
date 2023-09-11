@@ -398,6 +398,4 @@ updateCouponUsedStatus:(userId, couponId)=>{
 }
 
 
-
-
 }

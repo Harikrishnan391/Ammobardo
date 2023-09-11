@@ -158,7 +158,12 @@ verifyToLogin: async (req, res) => {
           message: "User is blocked. Please contact the administrator for assistance.",
         });
     
-      } else {
+      } else if(user.is_admin>0){
+        console.log("ivideeee")
+        return res.render("login",{message:"Sorry"})
+     
+      }
+      else {
         const passwordMatch = await bcrypt.compare(password, user.password);
 
         if (passwordMatch) {

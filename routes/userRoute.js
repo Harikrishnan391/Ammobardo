@@ -46,10 +46,10 @@
   user_route.get('/logout',auth.isLogin,userController.userLogout)
 
   user_route.get('/otp',userController.LoadVerifyOtp)
-  user_route.post('/otp-verify',auth.isLogout,otpController.verifyOTP);
+  user_route.post('/otp-verify',otpController.verifyOTP);
 
 
-  user_route.get('/home',userController.loadHome);
+  user_route.get('/home',auth.isLogin,userController.loadHome);
   user_route.get('/shop',userController.viewShop)
   user_route.get('/productDetails',userController.loadProductDetails)
 

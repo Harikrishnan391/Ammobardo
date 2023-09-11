@@ -10,8 +10,7 @@
 					<!-- <li><a href="dashboard.html">Dashboard</a></li> -->
 					<li><a class="active" href="/prodfileOrderList">Orders</a></li>
 					<li><a href="/userAddress">Address</a></li>
-					<li><a c href="/Coupons">Coupon</a></li>
-					
+					<li><a c href="/Coupons">Coupon</a></li>	
 				</ul>
 				<div class="dashboard-wrapper user-dashboard">
 					<div class="table-responsive">
@@ -24,7 +23,6 @@
 									<th>Status</th>
 									<th>Detail view</th>
 									<th>Actions</th>
-									
 								</tr>
 							</thead>
 							<tbody>
@@ -69,10 +67,10 @@
 		</div>
 	</div>
 </section>
-<script src="//cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
 <script>
     $(document).ready( function () {
     $('#myTable').DataTable();
 } );
 </script>
 <%-include('../partials/footer.ejs')%>
+<script src="//cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>

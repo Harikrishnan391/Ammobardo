@@ -8,241 +8,175 @@ const otpController = require("../controllers/otpController");
 const Admin = require("../models/adminModel");
 const Address = require("../models/addressModel");
 const Order = require("../models/orderModel");
-const randomstring=require('randomstring')
-const userHelper=require('../helpers/userHelper')
-const wishListHelper = require('../helpers/wishListHelper')
+const randomstring = require("randomstring");
+const userHelper = require("../helpers/userHelper");
+const wishListHelper = require("../helpers/wishListHelper");
 
-
-
-
-const securePassword =async (password) => {
+const securePassword = async (password) => {
   try {
     const passwordHash = await bcrypt.hash(password, 10);
     return passwordHash;
   } catch (error) {
     console.log(error.message);
   }
-}
-
+};
 
 /* ========================Loading Register Page======================== */
 
 const loadRegister = async (req, res) => {
   try {
-
-     await userHelper.loadingRegister(req,res)
-
+    await userHelper.loadingRegister(req, res);
   } catch (error) {
-
     console.log(error.message);
-
   }
 };
 /* ========================Insert user======================== */
 
-const insertuser = async(req,res)=>{
-
+const insertuser = async (req, res) => {
   try {
-
-     await userHelper.insertingUser(req,res)
-    
+    await userHelper.insertingUser(req, res);
   } catch (error) {
-    
-    console.log(error.message)
+    console.log(error.message);
   }
-}
+};
 
 /* ========================Login Login Page======================== */
 
 const loginLoad = async (req, res) => {
   try {
-
-     await userHelper.loginPageLoad(req,res)
-     
-      } catch (error) {
-        console.log(error.message);
-        res.redirect('/user-error')
-
-      }
+    await userHelper.loginPageLoad(req, res);
+  } catch (error) {
+    console.log(error.message);
+    res.redirect("/user-error");
+  }
 };
 /* ========================Loading otp page======================== */
 
-const LoadVerifyOtp=async(req,res)=>{
-
+const LoadVerifyOtp = async (req, res) => {
   try {
-
-     userHelper.loadingVerifyOtp(req,res)
-    
+    userHelper.loadingVerifyOtp(req, res);
   } catch (error) {
-    console.log(error.message)
+    console.log(error.message);
   }
-}
+};
 
 /* ========================Verification for Login======================== */
 
-const verifyLogin = async(req,res)=>{
-
+const verifyLogin = async (req, res) => {
   try {
-    
-    await userHelper.verifyToLogin(req,res)
-
+    await userHelper.verifyToLogin(req, res);
   } catch (error) {
-    console.log(error.message)
+    console.log(error.message);
   }
-}
+};
 
 /* ========================Forget Password======================== */
 
-const forgetVerify= async(req,res)=>{
-
+const forgetVerify = async (req, res) => {
   try {
-
-    await userHelper.forgotPasswordVerify(req,res);
-    
+    await userHelper.forgotPasswordVerify(req, res);
   } catch (error) {
-    
-    console.log(error.message)
+    console.log(error.message);
   }
-}
-
-
+};
 
 /* ========================for got passoword================= */
 const forgetPasswordLoad = async (req, res) => {
   try {
-      await userHelper.forgetPasswordLoad(req, res);
-
+    await userHelper.forgetPasswordLoad(req, res);
   } catch (error) {
-      console.log(error.message);
-      res.redirect('/user-error')
+    console.log(error.message);
+    res.redirect("/user-error");
   }
-}
+};
 /* ========================Reset======================== */
 const resetPassword = async (req, res) => {
   try {
-
-      await userHelper.resettingPassword(req, res);
-
+    await userHelper.resettingPassword(req, res);
   } catch (error) {
-
-      console.log(error.message);
-      res.redirect('/user-error')
-      
+    console.log(error.message);
+    res.redirect("/user-error");
   }
-}
+};
 /* ========================User Logout======================== */
 
-const userLogout = async(req,res)=>{
-
-    try {
-      
-      await userHelper.logoutUser(req,res)
-      
-    } catch (error) {
-      
-      console.log(error.message)
-    }
-}
+const userLogout = async (req, res) => {
+  try {
+    await userHelper.logoutUser(req, res);
+  } catch (error) {
+    console.log(error.message);
+  }
+};
 
 /* ========================Index page Controller======================== */
 
-const loadindex = async(req,res)=>{
-
+const loadindex = async (req, res) => {
   try {
-
-    await userHelper.loadingIndexPage(req,res)
-    
+    await userHelper.loadingIndexPage(req, res);
   } catch (error) {
-
-    console.log(error.message)
-    res.redirect('/user-error')
+    console.log(error.message);
+    res.redirect("/user-error");
   }
-}
+};
 
 /* ========================HOME Page Controller======================== */
 
-const loadHome = async(req,res)=>{
-
-  try {    
-
-     await userHelper.loadingUserhome(req,res)
-    
+const loadHome = async (req, res) => {
+  try {
+    await userHelper.loadingUserhome(req, res);
   } catch (error) {
-    res.redirect('/user-error')
-    
-    console.log(error.message)
+    res.redirect("/user-error");
+
+    console.log(error.message);
   }
-}
+};
 /* ========================Loading Error page======================== */
 
-const errorMessage=async(req,res)=>{
-
+const errorMessage = async (req, res) => {
   try {
-
-    await userHelper.loadingErrorPage(req,res)
-    
-  } catch (error) {
-    
-  }
-}
+    await userHelper.loadingErrorPage(req, res);
+  } catch (error) {}
+};
 /* ========================Shop Controller======================== */
 
-const viewShop =async(req,res)=>{
-
+const viewShop = async (req, res) => {
   try {
-
-     await userHelper.loadingShop(req,res)
-    
+    await userHelper.loadingShop(req, res);
   } catch (error) {
-    
-    console.log(error.message)
-    res.redirect('/user-error')
+    console.log(error.message);
+    res.redirect("/user-error");
   }
-}
-     
+};
 
 /* ========================Single product  Controller======================== */
 
-const loadProductDetails = async(req,res)=>{
-
+const loadProductDetails = async (req, res) => {
   try {
-
-    await userHelper.singleProductView(req,res)
-    
+    await userHelper.singleProductView(req, res);
   } catch (error) {
- 
-    console.log(error.message)
+    console.log(error.message);
   }
-}
-
+};
 
 /* ========================user MyAccount======================== */
 
-const loadmyAccount = async(req,res)=>{
-
-   try {
-
-    await userHelper.loadingMyAccount(req,res)
-    
-   } catch (error) {
-    
-    console.log(error.message)
-   }
-}
+const loadmyAccount = async (req, res) => {
+  try {
+    await userHelper.loadingMyAccount(req, res);
+  } catch (error) {
+    console.log(error.message);
+  }
+};
 
 /* ========================Add Address ======================== */
 
-const addAddress = async(req,res)=>{
-
+const addAddress = async (req, res) => {
   try {
-
-    await userHelper.addingAddress(req,res)
-    
+    await userHelper.addingAddress(req, res);
   } catch (error) {
-    
-    console.log(error.message)
+    console.log(error.message);
   }
-}
+};
 /* ========================Edit Address ======================== */
 const editAddress = async (req, res) => {
   console.log("ivdeeeeeeeeeee");
@@ -256,7 +190,7 @@ const editAddress = async (req, res) => {
   const state = req.body.state;
   const mobileNumber = req.body.mobileNumber;
 
-  console.log(id)
+  console.log(id);
 
   // const update = await Address.updateOne(
   //   { "address._id": id }, // Match the document with the given ID
@@ -278,29 +212,30 @@ const editAddress = async (req, res) => {
 
 /* ========================Delete Address ======================== */
 
-const deleteAddress = async(req,res)=>{
-
+const deleteAddress = async (req, res) => {
   try {
-
-    await  userHelper.deletingAddress(req,res)
-    
+    await userHelper.deletingAddress(req, res);
   } catch (error) {
-    
-    console.log(error.message)
+    console.log(error.message);
   }
-}
+};
 
 /* ============ Order Sucess ========================= */
 const orderSucess = async (req, res) => {
   try {
     const userId = req.session.user_id;
     const userData = await User.findById({ _id: req.session.user_id });
-    const wishlistCount = await wishListHelper.getWishListCount(req.session.user_id);
-
+    const wishlistCount = await wishListHelper.getWishListCount(
+      req.session.user_id
+    );
 
     const orders = await Order.find({ user: userId }).exec();
 
-    res.render("Ordersucess", { user: userData ,orders: orders,wishlistCount:wishlistCount});
+    res.render("Ordersucess", {
+      user: userData,
+      orders: orders,
+      wishlistCount: wishlistCount,
+    });
   } catch (error) {
     console.log(error.message);
   }
@@ -310,42 +245,34 @@ const orderSucess = async (req, res) => {
 
 const orderFailed = async (req, res) => {
   try {
+    const wishlistCount = await wishListHelper.getWishListCount(
+      req.session.user_id
+    );
+    const userData = await User.findById({ _id: req.session.user_id });
 
-    const wishlistCount = await wishListHelper.getWishListCount(req.session.user_id);
-      const userData = await User.findById({ _id: req.session.user_id });
-      
-      res.render('orderFailed',{user:userData,wishlistCount})
-
+    res.render("orderFailed", { user: userData, wishlistCount });
   } catch (error) {
-      console.log(error.message);
-     
+    console.log(error.message);
   }
-}
-
+};
 
 /* ================new Account ========================= */
 
-
-const accountLoad=async(req,res)=>{
-
-   try {
-
-   await  userHelper.loadingNewaccount(req,res)
-
-   } catch (error) {
-
-    console.log(error.message)
-   }
-}
+const accountLoad = async (req, res) => {
+  try {
+    await userHelper.loadingNewaccount(req, res);
+  } catch (error) {
+    console.log(error.message);
+  }
+};
 
 /* ====================================================== */
-
 
 // edit info
 
 // const editInfo = async (req, res) => {
 //   try {
-   
+
 //    const userId=req.session.user_id
 
 //     const{name,email,mobile}=req.body
@@ -357,68 +284,36 @@ const accountLoad=async(req,res)=>{
 
 //     res.redirect('/account')
 
-   
 //   } catch (error) {
 //     console.log(error.message);
 //   }
 
 // };
 
-
-
 //editPassword
 const editPassword = async (req, res) => {
   try {
-   
-    await userHelper.changinguserPassword(req,res)
+    await userHelper.changinguserPassword(req, res);
   } catch (error) {
     console.log(error.message);
   }
 };
 
-
-
-
-const userAddress=async(req,res)=>{
-
+const userAddress = async (req, res) => {
   try {
-
-    await  userHelper.loadingUserAdress(req,res)
-    
+    await userHelper.loadingUserAdress(req, res);
   } catch (error) {
-    
-
-    console.log(error.messge)
+    console.log(error.messge);
   }
+};
 
-}
-
-
-const couponLoad=async(req,res)=>{
-
+const couponLoad = async (req, res) => {
   try {
-
-    
-
-    await userHelper.loadingCoupons(req,res)
-    
+    await userHelper.loadingCoupons(req, res);
   } catch (error) {
-    
-    console.log(error.message)
+    console.log(error.message);
   }
-
-}
-
-
-
-    
-
-
-
-
-
-
-
+};
 
 module.exports = {
   loadRegister,
@@ -437,7 +332,7 @@ module.exports = {
   errorMessage,
   accountLoad,
   userAddress,
-  editPassword ,
+  editPassword,
   securePassword,
   orderFailed,
   forgetVerify,
@@ -445,6 +340,5 @@ module.exports = {
   resetPassword,
   couponLoad,
   LoadVerifyOtp,
-  editAddress
-
+  editAddress,
 };

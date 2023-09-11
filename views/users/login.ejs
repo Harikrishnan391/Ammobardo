@@ -17,6 +17,7 @@
     <link rel="shortcut icon" type="image/x-icon" href="../assets2/imgs/theme/logo2.svg">
     <!-- Template CSS -->
     <link href="../assets2/css/main.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.0/css/all.min.css">
    
 
     <style>
@@ -32,6 +33,13 @@
     height: auto;
     z-index: 1;
     }   
+    .field-icon {
+    position: absolute;
+    top: 50%;
+    right: 10px; /* Adjust the right distance as needed */
+    transform: translateY(-50%);
+    cursor: pointer;
+    }
     </style>
 </head>
 
@@ -62,15 +70,18 @@
                    
                     <form method="post" action="/login" onsubmit="return validateForm()">
                         <div class="mb-3">
-                            <input class="form-control" name="email" placeholder="Username or email" type="text" value="""  id="emailInput" >
+                            <input class="form-control" name="email" placeholder="Username or email" type="text" value=""  id="emailInput" >
                             <span id="emailError" class="text-danger"></span>
                         </div> <!-- form-group// -->
                         <div class="mb-3">
+                            <div class="position-relative">
                             <input class="form-control" name="password" placeholder="Password" type="password" value="" id="passwordInput" >
-                            <img src="../assets2/imgs/icons/eye-close.png"alt="" class="eyeicon" id="eyeicon">
+                            <!-- <img src="../assets2/imgs/icons/eye-close.png"alt="" class="eyeicon" id="eyeicon"> -->
+                            <span toggle="#passwordInput" class="fa fa-fw fa-eye field-icon toggle-password"></span>
                             <span id="passwordError" class="text-danger"></span>
-                        </div> <!-- form-group// -->
-                      
+                            </div>
+                        </div> <!-- form-group// --> 
+
                         <div class="mb-3">
                             <a  data-mdb-toggle="modal" data-mdb-target="#exampleModal"  id="forgetmodal">Forgot password?</a>  
                         </div> 
@@ -128,14 +139,22 @@
     <!--form validation-->
 
  <script>
-     $(document).ready(function() {
-        $('#forgetmodal').click(function(e) {
+    $(document).ready(function () {
+    // Toggle password visibility
+    $(".toggle-password").click(function () {
+        $(this).toggleClass("fa-eye fa-eye-slash");
+        var input = $($(this).attr("toggle"));
+        if (input.attr("type") == "password") {
+            input.attr("type", "text");
+        } else {
+            input.attr("type", "password");
+        }
+    });
+    $('#forgetmodal').click(function(e) {
             e.preventDefault();
             $('#exampleModal').modal('show');
-        });
     });
- </script>
-   
-   
+});
+ </script>  
 </body>
 </html>

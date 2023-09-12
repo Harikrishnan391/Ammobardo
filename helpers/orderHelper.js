@@ -88,7 +88,7 @@ module.exports={
             try {
 
                 let orderStatus
-
+                console.log('Ordered Producttss',orderedProducts)
     
                 if (orderData['paymentMethod'] === 'COD') {
                     orderStatus = 'Placed'

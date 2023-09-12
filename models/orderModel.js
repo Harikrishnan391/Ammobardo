@@ -29,6 +29,10 @@ const orderSchema = new mongoose.Schema({
     type: Number,
    
   },
+  couponDiscount:{
+    type:Number,
+    default:0
+  },
   totalQuantity: {
     type: Number, // Store the total quantity as a number
     required: true,

@@ -54,7 +54,7 @@
                                         </div>
                                     </td>
                                     <td class="text-right" data-title="Cart">
-                                        <span>₹<span class="subtotal" id="subtotal-<%= product.productId %>"><%=product.subtotal %></span></span>
+                                        <span>₹<span class="subtotal" id="subtotal-<%= product.productId %>"><%=product.subtotal%></span></span>
                                     </td>
                                     <td class="action" data-title="Remove"><a href="#" class="text-muted" onclick="removeCartItem('<%= product.productId._id %>')">
                                         <i class="fi-rs-trash"></i></a></td>
@@ -119,9 +119,7 @@
         updateCartTotals();
          });
          
-    function changeQuantity(productId, quantityChange) {    
-        const stock = parseInt($(`.stock[data-productid="${productId}"]`).data("stock"));
-      
+    function changeQuantity(productId, quantityChange) {     
         $.ajax({
             type: 'POST',
             url: '/updateQuantity',

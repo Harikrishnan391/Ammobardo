@@ -148,7 +148,7 @@
       var myChart1 = new Chart(ctx1, {
           type: "bar",
           data: {
-              labels: ['July', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec', 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+              labels: ['June', 'July', 'Aug', 'Sept', 'Oct','Nov', 'Dec', 'Jan', 'Feb', 'Mar', 'Apr', 'May'],
               datasets: [{
                   label: "SALES HISTORY",
                   data: sales,
@@ -159,6 +159,7 @@
               responsive: true
           }
       });
+  
       // Payment Method Chart
       const paymentMethod = JSON.parse(decodeURIComponent('<%=paymentMethod%>'));
 

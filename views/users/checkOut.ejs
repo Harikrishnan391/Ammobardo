@@ -200,8 +200,14 @@
                               <div class="custome-radio">
                                 <input class="form-check-input" type="radio" name="paymentMethod" id="wallet" value="WALLET">
                                 <label class="form-check-label" for="wallet" data-bs-toggle="collapse" data-target="#wallet-info" aria-controls="">WALLET</label>
+                                <%if(walletDetails){%>
                                 <span class="wallet-balance">(Wallet Balance:
-                                    ₹<%=walletDetails.walletAmount%>)</span></label>
+                                    ₹<%=walletDetails.walletAmount%>)</span>
+                                    <%}else{%>
+                                        <span class="wallet-balance">(Wallet Balance:
+                                            ₹0)</span>
+                                        <%}%>
+                                </label>
                                
                               </div>
                               <p id="error-message" class="text-danger"></p>

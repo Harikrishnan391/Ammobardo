@@ -66,7 +66,7 @@
 
 
 
-  user_route.get('/myAccount',userController.loadmyAccount)
+  user_route.get('/myAccount',auth.isLogin,userController.loadmyAccount)
   user_route.get('/checkout',cartController.checkoutLoad)
   user_route.post('/placeOrder',orderController.placeOrder)
   user_route.post('/addAddress',userController.addAddress)
@@ -74,7 +74,7 @@
   user_route.get('/deleteAddress',userController.deleteAddress)
   user_route.get('/orderSucessfull',userController.orderSucess)
   user_route.get('/orderFailed',userController.orderFailed)
-  user_route.get('/cancelOrder',orderController.cancelOrder)
+  user_route.get('/cancelOrder',auth.isLogin,orderController.cancelOrder)
   user_route.get('/requestReturn',orderController.requestReturn)
   user_route.post('/verify-payment',orderController.verifyPayment)
 

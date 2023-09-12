@@ -266,6 +266,22 @@ const accountLoad = async (req, res) => {
   }
 };
 
+/* ====================Load About Page==================== */
+const loadAboutPage=async(req,res)=>{
+
+  try {
+    const userData = req.session.user_id ? await User.findById(req.session.user_id) : null;
+    const wishlistCount = await wishListHelper.getWishListCount(
+      req.session.user_id
+    );
+    res.render('about',{wishlistCount,user:userData})
+    
+  } catch (error) {
+    
+    console.log(error.message)
+  }
+}
+
 /* ====================================================== */
 
 // edit info
@@ -341,4 +357,5 @@ module.exports = {
   couponLoad,
   LoadVerifyOtp,
   editAddress,
+  loadAboutPage
 };

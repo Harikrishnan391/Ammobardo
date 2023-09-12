@@ -37,7 +37,7 @@
 
   user_route.get('/',auth.isLogout,userController.loadindex);
   user_route.get('/index',  userController.loadindex);
-    
+  user_route.get('/about',userController.loadAboutPage)
   user_route.get('/register', auth.isLogout, userController.loadRegister);
   user_route.post('/register', multerConfig.uploadUserImage.single('image'), userController.insertuser);
 
@@ -47,8 +47,6 @@
 
   user_route.get('/otp',userController.LoadVerifyOtp)
   user_route.post('/otp-verify',otpController.verifyOTP);
-
-
   user_route.get('/home',auth.isLogin,userController.loadHome);
   user_route.get('/shop',userController.viewShop)
   user_route.get('/productDetails',userController.loadProductDetails)

@@ -6,7 +6,7 @@ const isLogin = async(req,res,next)=>{
         const user=await User.findOne({_id:req.session.user_id})
 
         if(req.session.user_id){
-          
+        
         }
         else{
            return res.redirect('/')

@@ -54,7 +54,7 @@ const addCart = async (req, res) => {
     }
 
     // // Decrease the product stock
-    product.stock -= 1;
+    // product.stock -= 1;
 
     await Promise.all([cart.save(), product.save()]);
 

@@ -39,3 +39,28 @@
     console.log(error.message);
   }
 }
+
+
+//stock decrementing 
+for (const orderedProduct of orderedProducts) {
+  const productId = orderedProduct.product;
+  const quantityOrdered = orderedProduct.quantity;
+  console.log('productId', productId);
+
+  // Update the product stock
+  const updatedProduct = await Product.findByIdAndUpdate(
+    productId,
+    { $inc: { stock: -quantityOrdered } },
+    { new: true }
+  );
+
+  if (!updatedProduct) {
+    // Product not found, handle error
+    throw new Error(`Product with ID ${productId} not found.`);
+  }
+
+  if (updatedProduct.stock < 0) {
+    // Insufficient stock, handle error
+    throw new Error(`Insufficient stock for product ${productId}.`);
+  }
+}

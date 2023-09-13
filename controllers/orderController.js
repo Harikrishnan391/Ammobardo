@@ -27,9 +27,37 @@ const placeOrder = async (req, res) => {
 
     let orderedProducts = await orderHelper.getProductListForOrders(userId);
 
-    console.log(orderedProducts);
+    console.log('orderedProducts',orderedProducts);
 
     if (orderedProducts) {
+
+      for (const orderedProduct of orderedProducts) {
+        const productId = orderedProduct.product;
+        const quantityOrdered = orderedProduct.quantity;
+        console.log('productId', productId);
+      
+        // Find the product by ID
+        const product = await Product.findById(productId);
+      
+        if (!product) {
+          // Product not found, handle error
+          throw new Error(`Product with ID ${productId} not found.`);
+        }
+      
+        // Calculate the new stock after decrementing
+        const newStock = product.stock - quantityOrdered;
+      
+        // Ensure the stock doesn't go below 0
+        product.stock = Math.max(0, newStock);
+      
+        // Save the updated product
+        const updatedProduct = await product.save();
+      
+        if (updatedProduct.stock < 0) {
+          // Insufficient stock, handle error
+          throw new Error(`Insufficient stock for product ${productId}.`);
+        }
+      }
       let totalOrderValue = await orderHelper.getCartValue(userId);
 
       console.log("totalOrderValueeee", totalOrderValue);

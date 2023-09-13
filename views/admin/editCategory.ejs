@@ -6,7 +6,7 @@
         <section class="content-main">
             <div class="content-header">
                 <div>
-                    <h2 class="content-title card-title">Categories </h2>
+                    <h2 class="content-title card-title">Edit Category</h2>
                     <p>Add, edit or delete a category</p>
                 </div>
             </div>
@@ -14,18 +14,18 @@
                 <div class="card-body">
                     <div class="row">
                         <div class="col-md-3">
-                            <form action="" method="post" id="categoryForm">
+                            <form action="/admin/editCategory?id=<%= categoryData.id %>" method="post">
+
                                 <div class="mb-4">
                                     <label for="product_name" class="form-label">Name</label>
-                                    <input type="text" placeholder="Type here" class="form-control"  name="category" id="categoryName" required onkeyup="validateCategoryName()"/>
-                                    <div id="categoryNameError" style="color: red;"></div>
+                                    <input type="text" placeholder="Type here" class="form-control" value="<%=categoryData.category%>"  name="category" required />
                                 </div>
                                 <div class="mb-4">
                                     <label class="form-label">Description</label>
-                                    <textarea placeholder="Type here"  name="description" class="form-control" required></textarea>
+                                    <input type="text" placeholder="Type here"  name="description" value="<%=categoryData.description%>" class="form-control" required>
                                 </div>
                                 <div class="d-grid">
-                                    <button class="btn btn-primary" type="submit">Create category</button>
+                                    <button class="btn btn-primary" type="submit">Update changes</button>
                                 </div>
                             </form>
                         </div>
@@ -43,33 +43,26 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <%categories.forEach(category =>{%>
+                                     
                                         <tr>
                                             <td class="text-center">
                                               
                                             </td>
-                                            <td><b><%=category.category%></b></td>
-                                            <td><%=category.description%></td>
+                                            <td><b></b></td>
+                                            <td></td>
                                             <td>
-                                                <% if (category.unlist) { %>
-                                                    Unlisted
-                                                <% } else { %>
-                                                    Listed
-                                                <% } %>
+                                             
                                             </td>
                                             <td class="text-end">
                                                 <div class="dropdown">
                                                     <a href="#" data-bs-toggle="dropdown" class="btn btn-light rounded btn-sm font-sm"> <i class="material-icons md-more_horiz"></i> </a>
                                                     <div class="dropdown-menu">
-                                                        <a class="dropdown-item" href="/admin/editCategory?id=<%=category.id%>">Edit info</a>
-                                                        <a class="dropdown-item" href="/admin/listCategory?id=<%=category.id%>">Listed</a>
-                                                        <a class="dropdown-item" href="/admin/unlistCategory?id=<%=category.id%>">unlist</a>
-                                                        <a class="dropdown-item text-danger" href="/admin/deleteCategory?id=<%=category.id%>">Delete</a>
+                                                     
                                                     </div>
                                                 </div> <!-- dropdown //end -->
                                             </td>
                                         </tr>
-                                       <%})%> 
+                                     
                                     </tbody>
                                 </table>
                             </div>
@@ -97,22 +90,6 @@
     
 <%include('../layouts2/footer.ejs')%>
 <script>
-    function validateCategoryName() {
-        var categoryNameInput = document.getElementById('categoryName');
-        var categoryNameError = document.getElementById('categoryNameError');
-        var categoryName = categoryNameInput.value;
-
-        var lettersOnlyRegex = /^[a-zA-Z]+$/;
-
-        if (!lettersOnlyRegex.test(categoryName)) {
-            categoryNameError.textContent = 'Category name must contain only letters.';
-            categoryNameInput.setCustomValidity('Category name must contain only letters.');
-        } else {
-            categoryNameError.textContent = '';
-            categoryNameInput.setCustomValidity('');
-        }
-    }
-
     $(document).ready(function () {
         $('#myTable').DataTable();
     });

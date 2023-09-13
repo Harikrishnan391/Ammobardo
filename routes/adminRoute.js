@@ -55,7 +55,8 @@ admin_route.post('/addCategory',Adminauth.isLogin,CategoryController.addCategory
 admin_route.get('/unlistCategory',Adminauth.isLogin,CategoryController.unlistCategory)
 admin_route.get('/listCategory',Adminauth.isLogin,CategoryController.listCategory)
 admin_route.get('/deleteCategory',Adminauth.isLogin,CategoryController.deleteCategory)
-
+admin_route.get('/editCategory',Adminauth.isLogin,CategoryController.editCategoryLoad)
+admin_route.post('/editCategory',CategoryController.updateCategory)
 
 admin_route.get('/addProduct',Adminauth.isLogin,productController.loadaddProduct)
 admin_route.post('/addProduct',multerConfig.upload,productController.createProduct)

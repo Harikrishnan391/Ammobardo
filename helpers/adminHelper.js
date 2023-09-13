@@ -49,7 +49,7 @@ const loadingDashboard= async (req, res) => {
                 },
             ]);
 
-            console.log('salesss by Month',salesbymonth)
+           
 
             const paymentMethod = await Order.aggregate([
                 {
@@ -66,7 +66,7 @@ const loadingDashboard= async (req, res) => {
                 },
             ]);
 
-            console.log('paymentMethod',paymentMethod)
+          
 
             const currentYear = new Date().getFullYear();
             const previousYear = currentYear - 1;
@@ -96,8 +96,7 @@ const loadingDashboard= async (req, res) => {
             ])
                 .exec();
 
-                console.log("yearlSales",yearSales)
-
+              
             // to get today sales
 
             // console.log(yearSales, 'yearSales');
@@ -141,7 +140,7 @@ const loadingDashboard= async (req, res) => {
                 },
             ]);
 
-            console.log("today Sales",todaySales)
+        
 
             const dashBoardDetails = {
                 totaluser,

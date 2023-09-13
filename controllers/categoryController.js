@@ -88,11 +88,60 @@ const Catlist = async (req, res) => {
   }
 };
 
+const editCategoryLoad=async(req,res)=>{
+
+  try {
+
+    console.log("ivideeeeeee")
+    const id = req.query.id;
+    console.log(id)
+
+    const categoryData = await Category.findById({ _id: id });
+    console.log(categoryData)
+    if(categoryData){
+
+      res.render('editCategory',{categoryData:categoryData})
+    }
+
+  
+  } catch (error) {
+    console.log(error.message)
+  }
+}
+
+
+ const updateCategory=async(req,res)=>{
+
+            try {
+
+            const id=req.body.id
+            const updateData=req.body;
+            console.log("updateData",updateData)
+          
+
+           await Category.findByIdAndUpdate(
+                id,
+                 updateData,
+
+                {new:true}
+            )
+           
+            res.redirect('/admin/addCategory')
+
+            } catch (error) {
+
+                console.log(error.message)
+            }
+
+ }
+
 module.exports = {
-  LoadCategory,
+  LoadCategory,  
   addCategory,
   unlistCategory,
   listCategory,
   Catlist,
   deleteCategory,
+  editCategoryLoad,
+  updateCategory
 };

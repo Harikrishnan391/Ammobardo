@@ -64,7 +64,7 @@
           <ul class="list-inline dashboard-menu text-center">
             <li><a href="/account">Profile Details</a></li>
             <li><a href="/prodfileOrderList">Orders</a></li>
-            <li><a class="active" href="address.html">Address</a></li>
+            <li><a class="active" href="#">Address</a></li>
             <li><a href="/Coupons">Coupons</a></li>
           
           
@@ -83,6 +83,7 @@
                     <th>postl Code</th>
                   </tr>
                 </thead>
+                <%if(userAddress){%>
                 <tbody>
                   <% userAddress.address.forEach((address,index)=> { %>
                   <tr>
@@ -101,6 +102,7 @@
                   </tr>
                   <%})%>
                 </tbody>
+                <%}%>
               </table>
             </div>  
           </div>
@@ -199,10 +201,10 @@
             var mobileNumber = document.getElementById("mobileNumberInput").value;
             var address = document.getElementById("addressInput").value;
             var city = document.getElementById("cityInput").value;
-            var city = document.getElementById("streetInput").value;
+            var street = document.getElementById("streetInput").value;
             var pincode = document.getElementById("pincodeInput").value;
 
-            // Validate the input values
+           // Validate the input values
             if (name.trim() === "") {
                 alert("Name cannot be empty");
                 return;
@@ -243,6 +245,7 @@
                 mobileNumber: mobileNumber,
                 address: address,
                 city: city,
+                street:street,
                 pincode: pincode,
         
             };
@@ -266,7 +269,6 @@
             location.reload();
         }
   </script>
-
 <%-include('../partials/footer.ejs')%>
 
      

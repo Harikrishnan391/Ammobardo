@@ -4,11 +4,6 @@
   const User = require('../models/userModel');
   require('dotenv').config();
 
-  // const accountSid= config.twilioAccountSid;
-  // const verifyServiceSid=config.verifyServiceSid
-  // const authToken= config.twilioAuthToken;
-  // const client =twilio(accountSid,authToken)
-
   const accountSid= process.env.ACCOUNT_SID;
   const verifyServiceSid=process.env.VERIFY_SID;
   const authToken=  process.env.AUTH_TOKEN;

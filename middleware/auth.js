@@ -36,30 +36,12 @@ const isLogout=async(req,res,next)=>{
 }
 
 
-const isBlocked =async(req,res,next)=>{
 
-    try {
-        
-        if(req.session.user_id){
-
-            const user=await User.findOne({_id:req.session.user_id})
-            if(user.blocked==true){
-
-                req.session.destroy()
-                res.redirect('/')
-
-            }
-
-        }
-    } catch (error) {
-       
-        console.log(error.message)
-    }
-}
 
 module.exports={
 
     isLogin,
-    isLogout
+    isLogout,
+  
    
 }    

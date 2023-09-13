@@ -183,29 +183,30 @@ const editAddress = async (req, res) => {
 
   const id = req.body.id;
   const name = req.body.name;
+  const mobile=req.body.mobileNumber
   const address = req.body.address;
-  const locality = req.body.locality;
   const city = req.body.city;
+  const street=req.body.street
   const pincode = req.body.pincode;
-  const state = req.body.state;
+
   const mobileNumber = req.body.mobileNumber;
 
-  console.log(id);
 
-  // const update = await Address.updateOne(
-  //   { "address._id": id }, // Match the document with the given ID
-  //   {
-  //     $set: {
-  //       "addresses.$.name": name,
-  //       "addresses.$.address": address,
-  //       "addresses.$.locality": locality,
-  //       "addresses.$.city": city,
-  //       "addresses.$.pincode": pincode,
-  //       "addresses.$.state": state,
-  //       "addresses.$.mobileNumber": mobileNumber,
-  //     },
-  //   }
-  // );
+
+  const update = await Address.updateOne(
+    { "address._id": id }, // Match the document with the given ID
+    {
+      $set: {
+        "address.$.name": name,
+        "address.$.mobile":mobile,
+        "address.$.homeAddress": address,
+        "address.$.city": city,
+        "address.$.street":street,
+        "address.$.postalCode": pincode,
+        "address.$.mobileNumber": mobileNumber,
+      },
+    }
+  );
 
   res.redirect("/userAddress");
 };
@@ -319,8 +320,9 @@ const userAddress = async (req, res) => {
     await userHelper.loadingUserAdress(req, res);
   } catch (error) {
     console.log(error.messge);
+    res.redirect('/user-error')
   }
-};
+};  
 
 const couponLoad = async (req, res) => {
   try {

@@ -101,7 +101,7 @@ module.exports={
                 }
                 // Calculate the total quantity of ordered products
                  let totalQuantity = orderedProducts.reduce((total, product) => total + product.quantity, 0);
-
+                console.log('orderrrr dataaaaaa',orderData)
                 const orderDetails = new Order({
                     user: userId,
                     date: Date(),

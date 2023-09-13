@@ -52,7 +52,6 @@
   user_route.get('/productDetails',userController.loadProductDetails)
 
   user_route.get('/user-error',userController.errorMessage)
-
   user_route.get('/account',userController.accountLoad)
   user_route.post('/editInfo',profileController.editInfo)  //editInfo,
   user_route.post('/editPassword',profileController.editPassword)  //editPassword
@@ -65,12 +64,12 @@
   user_route.post('/removeCartItem',cartController.removeCartItem)
 
 
-
   user_route.get('/myAccount',auth.isLogin,userController.loadmyAccount)
   user_route.get('/checkout',cartController.checkoutLoad)
   user_route.post('/placeOrder',orderController.placeOrder)
+  user_route.get('/userAddress',userController.userAddress)
   user_route.post('/addAddress',userController.addAddress)
-  user_route.post('updateAddress',userController.editAddress)
+  user_route.post('/updateAddress',userController.editAddress)
   user_route.get('/deleteAddress',userController.deleteAddress)
   user_route.get('/orderSucessfull',userController.orderSucess)
   user_route.get('/orderFailed',userController.orderFailed)
@@ -82,7 +81,7 @@
   user_route.get('/couponVerify/',couponController.verifyCoupon) 
   user_route.get('/applyCoupon/',couponController.applyCoupon) 
   user_route.get('/category/:category', userController.loadHome);
-  user_route.get('/userAddress',userController.userAddress)
+
 
   user_route.get('/prodfileOrderList',profileController.userOrderList)
   user_route.get('/wallet-placed',orderController.walletOrder)
@@ -94,7 +93,6 @@
 user_route.get('/wishList',wishListController.loadWishList)
 user_route.post('/add-to-wishlist',auth.isLogin,wishListController.addWishList)
 user_route.delete('/remove-product-wishlist',wishListController.removeProductWishlist) 
-
 user_route.get('/viewOrder',profileController.loadOrderSlip)
 user_route.post('/apply-coupon-request', couponControllerN.applyCouponPOST);
 

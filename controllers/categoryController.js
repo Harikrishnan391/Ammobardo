@@ -31,7 +31,7 @@ const addCategory = async (req, res) => {
       });
 
       await newCategory.save();
-
+      
       res.redirect("/admin/addCategory");
     }
   } catch (error) {

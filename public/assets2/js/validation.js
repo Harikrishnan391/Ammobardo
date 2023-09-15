@@ -62,7 +62,7 @@ function validateForm() {
         var nameErrorMessage = document.getElementById('nameErrorMessage');
         nameErrorMessage.textContent = "Product Name must not be empty.";
         return false;
-    } else if (!/^[A-Za-z\s]+$/.test(productName)) {
+    } else if (!/^[A-Za-z\s-]+$/.test(productName)) {
         var nameErrorMessage = document.getElementById('nameErrorMessage');
         nameErrorMessage.textContent = "Product Name should only contain letters and spaces.";
         return false;

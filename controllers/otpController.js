@@ -39,7 +39,6 @@
       const otp=req.body.otp
       console.log("check ",userMobile,otp)
 
-   
       client.verify.v2.services(verifyServiceSid).verificationChecks.create({to:userMobile,code:otp})
       .then(async(verification_check)=>{
        if(verification_check.status ==='approved'){

@@ -111,7 +111,7 @@
 </style>
 
 
-
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
 
 <div class="container-fluid row d-flex col-md-12 sales-container">
 
@@ -149,7 +149,7 @@
       <%if(order && order.length > 0){%>
         <div class="sales-form mt-5">
 
-            <table class="table w-100" id="myTable">
+            <table class="table w-100">
                 <thead>
 
                     <tr>
@@ -187,3 +187,4 @@
 </div>
 
 <%-include('../layouts2/footer.ejs')%>
+<script src="//cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>

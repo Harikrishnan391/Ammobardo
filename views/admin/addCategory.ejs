@@ -27,6 +27,7 @@
                                 <div class="d-grid">
                                     <button class="btn btn-primary" type="submit">Create category</button>
                                 </div>
+                                <p text="danger"><%= typeof message !== 'undefined' ? message : '' %></p>
                             </form>
                         </div>
                         <div class="col-md-9">
@@ -102,7 +103,7 @@
         var categoryNameError = document.getElementById('categoryNameError');
         var categoryName = categoryNameInput.value;
 
-        var lettersOnlyRegex = /^[a-zA-Z]+$/;
+        var lettersOnlyRegex = /^[a-zA-Z\s]+$/;
 
         if (!lettersOnlyRegex.test(categoryName)) {
             categoryNameError.textContent = 'Category name must contain only letters.';

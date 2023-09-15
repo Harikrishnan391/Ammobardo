@@ -5,6 +5,7 @@ const Address = require("../models/addressModel");
 const Order = require("../models/orderModel");
 const wishListHelper = require("../helpers/wishListHelper");
 const Wallet = require("../models/walletModel");
+const couponHelpers = require('../helpers/couponHelperN')
 
 const addCart = async (req, res) => {
   try {
@@ -94,10 +95,10 @@ const updateQuantity = async (req, res) => {
   try {
     const userId = req.session.user_id;
     const productId = req.body.productId;
-   const product=await Product.findOne({_id:productId})
-   console.log("product",product)
+    const product = await Product.findOne({ _id: productId });
+    console.log("product", product);
     const quantityChange = parseInt(req.body.quantityChange);
-   
+
     if (!userId) {
       res.status(401).send({ status: false, message: "Unauthorized" });
       return;
@@ -120,11 +121,8 @@ const updateQuantity = async (req, res) => {
         cart.products = cart.products.filter(
           (item) => item.productId.toString() !== productId
         );
-      }
-      else if(existingCartItem.quantity>product.stock){
-        
-      }
-       else {
+      } else if (existingCartItem.quantity > product.stock) {
+      } else {
         // Update the subtotal for the cart item
         existingCartItem.subtotal =
           existingCartItem.quantity * existingCartItem.price;
@@ -191,6 +189,7 @@ const checkoutLoad = async (req, res) => {
     const cart = await Cart.findOne({ user: UserData._id }).populate(
       "products.productId"
     );
+
     const wishlistCount = await wishListHelper.getWishListCount(userId);
 
     const walletDetails = await Wallet.findOne({ userId: userId }).lean();
@@ -206,7 +205,33 @@ const checkoutLoad = async (req, res) => {
       delete req.session.couponApplied;
     }
 
-    if (cart.products.length > 0) {
+  
+    const total = cart.products.reduce(
+      (sum, product) => sum + Number(product.subtotal),
+      0
+   );
+
+      let couponDiscount = 0;
+
+     const eligibleCoupon = await couponHelpers.checkCurrentCouponValidityStatus(userId, total);
+
+     if (eligibleCoupon.status) {
+         couponDiscount = eligibleCoupon.couponDiscount;
+     } else {
+         couponDiscount = 0;
+     }
+
+     // total amount by reducing offer price
+
+     let TotalAmount  = total- couponDiscount
+
+     console.log(TotalAmount,'TotalAmount')
+
+   
+
+
+    if (cart.products.length > 0 && UserData.blocked==false ) {
+     
       let products = cart.products;
       res.render("checkOut", {
         user: UserData,
@@ -216,13 +241,19 @@ const checkoutLoad = async (req, res) => {
         couponApplied,
         couponError,
         walletDetails,
+        total,
+        couponDiscount,
+        TotalAmount:TotalAmount,
+      
+
       });
       delete req.session.couponApplied;
     } else {
-      res.redirect("/viewcart");
+      res.redirect('/user-error')
     }
   } catch (error) {
     console.log(error.message);
+    res.redirect('/user-error')
   }
 };
 

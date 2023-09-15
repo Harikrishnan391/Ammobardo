@@ -28,6 +28,7 @@ const addCategory = async (req, res) => {
       const newCategory = new Category({
         category: category,
         description: description,
+        message
       });
 
       await newCategory.save();

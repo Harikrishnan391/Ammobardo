@@ -77,13 +77,13 @@
   user_route.get('/requestReturn',orderController.requestReturn)
   user_route.post('/verify-payment',orderController.verifyPayment)
 
-  user_route.get('/Coupons',userController.couponLoad)
+  user_route.get('/Coupons',auth.isLogin,userController.couponLoad)
   user_route.get('/couponVerify/',couponController.verifyCoupon) 
   user_route.get('/applyCoupon/',couponController.applyCoupon) 
   user_route.get('/category/:category', userController.loadHome);
 
 
-  user_route.get('/prodfileOrderList',profileController.userOrderList)
+  user_route.get('/prodfileOrderList',auth.isLogin,profileController.userOrderList)
   user_route.get('/wallet-placed',orderController.walletOrder)
   user_route.post('/forget',userController.forgetVerify)
   user_route.get('/forget-password',auth.isLogout,userController.forgetPasswordLoad);

@@ -54,10 +54,10 @@
 
                 <form method="post" action="/placeOrder">
                     <div class="form-group">
-                        <input type="text" required="" name="name" placeholder="First name *" value="">
+                        <input type="text" required="" name="name" id="nameInput" placeholder="First name *" value="">
                     </div>
                     <div class="form-group">
-                        <input type="text" required="" name="mobile" placeholder="mobile *" value="">
+                        <input type="text" required="" name="mobile" placeholder="mobile *" id="mobileNumberInput" value="">
                     </div>
                     <div class="form-group">
                         <input required="" type="text" name="homeAddress" placeholder="Home address" value="">
@@ -70,7 +70,7 @@
                         <input type="text" name="street" required="" placeholder="Street/town" value="">
                     </div>
                     <div class="form-group">
-                        <input required="" type="text" name="postalcode" placeholder="postal code*" value="">
+                        <input required="" type="text" name="postalcode" placeholder="postal code*"  id="pincodeInput" value="">
                     </div>
             </div>
 
@@ -130,7 +130,7 @@
                                         <span class="product-qty" name="quantity"><%= product.quantity %></span>
                                     </td>
                                     <td><%= product.subtotal %></td>
-                                    <% totalAmount+=product.subtotal %>
+                                    <!-- <% totalAmount+=product.subtotal %> -->
                                 </tr>
                                 <% }) %>
 
@@ -139,8 +139,8 @@
                                     <td colspan="2"><em>Free Shipping</em></td>
                                 </tr>
                                 <tr>
-                                    <th>Total</th>
-                                    <td colspan="2" class="product-subtotal"><span  id="total" name="total" class="font-xl text-brand fw-900"><%= totalAmount.toFixed(2)%></span></td>
+                                    <th>SubTotal</th>
+                                    <td colspan="2" class="product-subtotal"><span  id="total" name="total" class="font-xl text-brand fw-900">₹<%= total%></span></td>
                                         <input type="hidden" name="discountPercentage" id="discountPercentage"
                                         value="0">
                                         <input type="hidden" name="discountAmount" id="discountAmount" value="0">
@@ -152,7 +152,22 @@
 
                     </div>
                     <!---Coupon section-->
-                 
+                    <div id="couponSection">
+                    <ul class="list-group mb-3 sticky-top">
+                        <li class="list-group-item d-flex justify-content-between bg-light">
+                            <div class="text-success">
+                                <h6 class="my-0">Coupon code</h6>
+                                <small>EXAMPLECODE</small>
+                            </div>
+                            <span class="text-success"><span style="color: rgb(15, 48, 210)">You saved</span>-₹<%=couponDiscount%></span>
+                         
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between">
+                            <span>Total(INR)</span>
+                            <strong>₹<%=TotalAmount%></strong>
+                        </li>
+                    </ul>
+                   </div>
                     <div class="mb-30 mt-50">
                         <div class="heading_s1 mb-3">
                             <h4>Apply Coupon</h4>
@@ -173,7 +188,7 @@
                                             <div class="form-group col-lg-6">
                                                 <button type="submit" id="redeemButton"  class="btn btn-secondary">Redeem</button>
                                             </div>
-                                      
+
                                         </div>
                                 </div>
                             </div>
@@ -213,7 +228,8 @@
                               <p id="error-message" class="text-danger"></p>
                             </div>
                         </div>
-                    <button type="submit" class="btn btn-fill-out btn-block mt-30" id="checkout-button" >Place Order</button>
+                    <button type="submit" class="btn btn-fill-out btn-block mt-30" id="checkout-button" onclick="validateAddressAndPlaceOrder()" >Place Order</button>
+                    <div id="addressError" class="text-danger"></div>
                 </div>
             </form>
         </div>
@@ -222,13 +238,55 @@
 
 </section>
             
+<script>
+    function validateAddressAndPlaceOrder() {
+    // Check if any of the address fields is empty
+    
+    if (
+        !selectedAddress ||
+        !selectedAddress.name ||
+        !selectedAddress.mobile ||
+        !selectedAddress.homeAddress ||
+        !selectedAddress.city ||
+        !selectedAddress.street ||
+        !selectedAddress.postalCode
+    ) 
+    {
+        // Show the error message
+        const addressError = document.getElementById('addressError');
+        addressError.textContent = 'Please fill in the address before placing the order.';
+        return; // Prevent form submission
+    }
+    var name = document.getElementById("nameInput").value;
+    var mobileNumber = document.getElementById("mobileNumberInput").value;
+    var pincode = document.getElementById("pincodeInput").value;
+           // Validate the input values
+    if (name.trim() === "") {
+        alert("Name cannot be empty");
+        return;
+      }
+      if (!/^\+?\d{1,12}$/.test(mobileNumber)) {
+                alert("Mobile Number should contain a maximum of 12 numbers only");
+                return;
+    }
+      if (!/^[a-zA-Z ]+$/.test(name)) {
+                alert("Name should not contain numbers or special characters");
+                return;
+      }
+      if (!/^\d{6}$/.test(pincode)) {
+                alert("Pincode should contain exactly 6 digits");
+                return;
+     }
 
+    // If the address is filled, submit the form
+    document.querySelector('form').submit();
+}
+</script>
 
 
 
 <script>
     let selectedAddress = null;
-
     // Function to populate billing details form fields
     function populateBillingDetails(address) {
         const nameInput = document.querySelector('input[name="name"]');
@@ -256,6 +314,10 @@
             street: street,
             postalCode: postalCode
         };
+
+          // Clear the error message
+        const addressError = document.getElementById('addressError');
+        addressError.textContent = '';
 
         // Populate the billing details form with the selected address
         populateBillingDetails(selectedAddress);
@@ -402,6 +464,7 @@ $(document).ready(function(){
                 if (response.success) {
                     messageDiv.html('<p style="color: #21b503;"><b>' + response.message + '</b></p>');
                     // You can also update other elements or perform actions here if needed
+                    location.reload()
                 } else {
                     messageDiv.html('<p style="color: red;"><b>' + response.message + '</b></p>');
                 }

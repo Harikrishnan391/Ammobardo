@@ -344,7 +344,7 @@ const weeklySales= () => {
             );
 
             const order = await Order.find({
-                status: { $nin: ["Order Cancelled"] },
+                status: { $nin: ["Order Cancelled","Pending","Returned"] },
                 createdAt: {
                     $gte: startOfWeek,
                     $lt: endOfWeek

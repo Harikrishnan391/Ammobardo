@@ -15,6 +15,7 @@ const loadWishList = async (req, res) => {
     res.render("wishList", { user: userData, wishListProduct, wishlistCount });
   } catch (error) {
     console.log(error.message);
+    res.redirect("/user-error");
   }
 };
 
@@ -62,7 +63,6 @@ const addWishList = async (req, res) => {
 };
 
 const removeProductWishlist = async (req, res) => {
-
   const userId = req.session.user_id;
 
   const proId = req.body.proId;

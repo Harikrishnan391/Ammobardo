@@ -71,19 +71,10 @@ const loadDashboard = async (req, res) => {
     const totalUser = dashBoardDetails.totaluser;
     const totalSales = dashBoardDetails.totalSales;
     const salesbymonth = dashBoardDetails.salesbymonth;
-    console.log('Monthly sales',salesbymonth)
     const paymentMethod = dashBoardDetails.paymentMethod;
     const yearSales = dashBoardDetails.yearSales;
     const todaySales = dashBoardDetails.todaySales;
-    // console.log(todaySales,'todaySales');
-    // console.log(totalUser,'totalUser');
-    // console.log(totalSales,'totalSales');
-
-    // console.log(paymentMethod,'paymentMethod');
-    // console.log(yearSales,'yearSales');
     let sales = encodeURIComponent(JSON.stringify(salesbymonth));
-
-    //  console.log(sales,'sales');
 
     res.render("home", {
       totalUser,

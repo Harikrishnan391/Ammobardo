@@ -57,7 +57,6 @@
   user_route.post('/editPassword',profileController.editPassword)  //editPassword
 
  
-
   user_route.get('/viewcart',cartController.loadCart)
   user_route.post('/add-cart/:id',auth.isLogin,cartController.addCart)
   user_route.post('/updateQuantity',cartController.updateQuantity)

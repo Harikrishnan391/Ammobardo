@@ -87,50 +87,7 @@
   </div>
 </div>
 
-<!-- Recent Sales Start -->
-{<% if (orderDetails.length) { %>
-  <div class="container-fluid pt-4 px-4">
-    <div class="bg-light text-center rounded p-4">
-        <div class="d-flex align-items-center justify-content-between mb-4">
-            <h6 class="mb-0">Recent Sales</h6>
-            <a href="">Show All</a>
-        </div>
-        <div class="table-responsive">
-            <table class="table text-start align-middle table-bordered table-hover mb-0" id="myTable">
-                <thead>
-                    <tr class="text-dark">
-                        <th scope="col">DATE</th>
-                        <th scope="col">USER</th>
-                        <th scope="col">ORDER ID</th>
-                        <th scope="col">TOTAL PRICE</th>
-                        <th scope="col">PAYMENT METHOD</th>
-                        <th scope="col">STATUS</th>
-                        <th scope="col">ORDERS</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <% orderDetails.forEach(function(order) { %>
-                    <tr>
-                        <td scope="row"><%= order.date %></td>
-                        <td><%= order.userName %></td>
-                        <td><%= order._id %></td>
-                        <td><%= order.total %></td>
-                        <td><%= order.paymentMethod %></td>
-                        <td><%= order.status %></td>
-                        <td>
-                            <a href="/admin/orderDetails?id=<%= order._id %>"
-                                class="btn btn-primary btn-sm btn-block view-btn" style="color: #ffffff;"
-                                type="button">Details</a>
-                        </td>
-                    </tr>
-                    <% }); %>
-                </tbody>
-            </table>
-        </div>
-    </div>
-  </div>
-  <% } %>
-<!-- Recent Sales End -->
+
 
 <%-include('../layouts2/footer.ejs')%>
 

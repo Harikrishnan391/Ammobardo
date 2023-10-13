@@ -24,6 +24,8 @@ module.exports={
 
             try{
                 const ProductDetails=await Cart.findOne({user:userId}).lean()
+                
+                console.log("Product Details",ProductDetails)
 
 
                 const subtotal=ProductDetails.products.reduce((acc,product)=>{

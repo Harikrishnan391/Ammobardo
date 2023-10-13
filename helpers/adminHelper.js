@@ -178,12 +178,13 @@ const OrdersList= async (req, res) => {
             return { ...history, date: createdOnIST, userName: history.user.name };
         });
 
-        // console.log(orderHistory, 'orderHistoryyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy');
+    
 
         return orderHistory
     } catch (error) {
         console.log(error.message)
-        res.redirect('/admin/admin-error')
+        console.log("hello mann")
+        // res.redirect('/admin/admin-error')
     }
 }
 

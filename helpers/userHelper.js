@@ -8,15 +8,15 @@ const otpController = require("../controllers/otpController");
 const Admin = require("../models/adminModel");
 const Address = require("../models/addressModel");
 const Order = require("../models/orderModel");
-const Wallet = require('../models/walletModel')
-const banner = require('../models/bannerModel')
-const coupons=require('../models/couponModel')
-const newCoupons=require('../models/newCouponModel')
-const wishListHelper = require('../helpers/wishListHelper')
-const randomstring=require('randomstring')
-require('dotenv').config()
-
-
+const Wallet = require("../models/walletModel");
+const banner = require("../models/bannerModel");
+const coupons = require("../models/couponModel");
+const newCoupons = require("../models/newCouponModel");
+const wishListHelper = require("../helpers/wishListHelper");
+const generateOtp = require("../util/generateOtp");
+const generateMail = require("../util/generateMail");
+const randomstring = require("randomstring");
+require("dotenv").config();
 
 module.exports = {
   // Hashes the given password using bcrypt.
@@ -37,51 +37,49 @@ module.exports = {
       console.log(error.message);
     }
   },
-// send  email to verify 
+  // send  email to verify
 
- sendResetPasswordMail:async(name,email,token)=>{
-
+  sendResetPasswordMail: async (name, email, token) => {
     try {
-  
-      const transporter=nodemailer.createTransport(
-       {
-        host:"smtp.ethereal.email",
-        port:587,
-        secure:false,
-        requireTls:true,
-        auth:{
-          user:process.env.ETHERNAL_ID,
-          pass:process.env.ETHERNAL_PASS
-        }
-      }
-      )
-      const mailOptions={
-        from:config.emailUser,
-        to:email,
-        subject:'For verification mail',
-        html:'<p>Hii '+name+',please click here to <a href="https://harikrishnan.life/forget-password?token='+token+'">Reset</a>your password</p>'
+      const transporter = nodemailer.createTransport({
+        host: "smtp.ethereal.email",
+        port: 587,
+        secure: false,
+        requireTls: true,
+        auth: {
+          user: process.env.ETHERNAL_ID,
+          pass: process.env.ETHERNAL_PASS,
+        },
+      });
+      const mailOptions = {
+        from: config.emailUser,
+        to: email,
+        subject: "For verification mail",
+        html:
+          "<p>Hii " +
+          name +
+          ',please click here to <a href="https://harikrishnan.life/forget-password?token=' +
+          token +
+          '">Reset</a>your password</p>',
         //http://localhost:3000
-      }
-      transporter.sendMail(mailOptions,function(error,info){
-        if(error){
-          console.log(error)
+      };
+      transporter.sendMail(mailOptions, function (error, info) {
+        if (error) {
+          console.log(error);
+        } else {
+          console.log("email has been sent ", info.response);
         }
-        else{
-          console.log("email has been sent ",info.response)
-        }
-      })
-      
+      });
     } catch (error) {
-      
-      console.log(error.message)
+      console.log(error.message);
     }
-  
-  
   },
   // Inserts a new user or admin based on the email.
   insertingUser: async (req, res) => {
     try {
       const spassword = await module.exports.securePassword(req.body.password);
+      const verificationCode = generateOtp.generateOTP();
+      console.log(verificationCode);
       let userData;
 
       if (req.body.email === "admin@gmail.com") {
@@ -103,6 +101,7 @@ module.exports = {
           mobile: req.body.mno,
           image: req.file.filename,
           password: spassword,
+          otp: verificationCode,
           is_admin: 0,
         });
         userData = await user.save();
@@ -124,152 +123,134 @@ module.exports = {
       res.render("login");
     } catch (error) {
       console.log(error.message);
-      res.redirect('/user-error')
+      res.redirect("/user-error");
     }
   },
 
   //loading otp page
 
-  loadingVerifyOtp:async(req,res)=>{
-
+  loadingVerifyOtp: async (req, res) => {
     try {
-    
-      res.render('otp')
-      
+      res.render("otp");
     } catch (error) {
-      
-      console.log(error.message)
-      res.redirect('/user-error')
+      console.log(error.message);
+      res.redirect("/user-error");
     }
   },
 
-
   // Verifies user login credentials and handles OTP.
-verifyToLogin: async (req, res) => {
-  try {
-    
-    const email = req.body.email;
-    const password = req.body.password;
-    const user = await User.findOne({ email: email });
+  verifyToLogin: async (req, res) => {
+    try {
+      const email = req.body.email;
+      const password = req.body.password;
+      const user = await User.findOne({ email: email });
+      console.log(user);
+      const verificationCode = user.otp;
 
-    if (user) {
-      if (user.blocked) {
-        res.render("login", {
-          message: "User is blocked. Please contact the administrator for assistance.",
-        });
-    
-      } else if(user.is_admin>0){
-        console.log("ivideeee")
-        return res.render("login",{message:"Sorry"})
-     
-      }
-      else {
-        const passwordMatch = await bcrypt.compare(password, user.password);
+      console.log(verificationCode);
 
-        if (passwordMatch) {
-          if (user.is_verified === 0) {
-            const otp = await otpController.sendOTP(user.mobile); // Send OTP to the user's mobile number
-            req.session.user_id = user._id;
-            res.render("otp", {
-              message: "Please enter the OTP sent to your mobile number",
-            });
-
-          } else {
-            req.session.user_id = user._id;
-            res.redirect("/home");
-          
-          }
+      if (user) {
+        if (user.blocked) {
+          res.render("login", {
+            message:
+              "User is blocked. Please contact the administrator for assistance.",
+          });
+        } else if (user.is_admin > 0) {
+          return res.render("login", { message: "Sorry" });
         } else {
-          res.render("login", { message: "Email or password is incorrect" });
-          
+          const passwordMatch = await bcrypt.compare(password, user.password);
+
+          if (passwordMatch) {
+            if (user.is_verified === 0) {
+              // const otp = await otpController.sendOTP(user.mobile); // Send OTP to the user's mobile number
+              const otp=await generateMail(verificationCode,email)
+              req.session.user_id = user._id;
+              res.render("otp", {
+                message: "Please enter the OTP sent to your mobile number",
+              });
+            } else {
+              req.session.user_id = user._id;
+              res.redirect("/home");
+            }
+          } else {
+            res.render("login", { message: "Email or password is incorrect" });
+          }
         }
+      } else {
+        res.render("login", { message: "Email or password is incorrect" });
       }
-    } else {
-      res.render("login", { message: "Email or password is incorrect" });
+    } catch (error) {
+      console.log(error.message);
     }
-  } catch (error) {
-    console.log(error.message);
-  }
-},
-
-
+  },
 
   // Loads the user's home page.
   loadingUserhome: async (req, res) => {
     try {
-      var search='';
-        
-      if(req.query.search){
-          search=req.query.search
+      var search = "";
 
+      if (req.query.search) {
+        search = req.query.search;
       }
       const products = await Product.find({
-       
-        $or:[ 
-          {name:{$regex:'.*'+search+'.*'}},
-          {category:{$regex:'.*'+search+'.*'}}
-
-        ]
+        $or: [
+          { name: { $regex: ".*" + search + ".*" } },
+          { category: { $regex: ".*" + search + ".*" } },
+        ],
       });
       const category = await Category.find({ unlist: false });
       const userData = await User.findById({ _id: req.session.user_id });
       const Banners = await banner.find();
-      const wishlistCount = await wishListHelper.getWishListCount(req.session.user_id);
-   
+      const wishlistCount = await wishListHelper.getWishListCount(
+        req.session.user_id
+      );
 
       res.render("home", {
         user: userData,
         products: products,
         category: category,
         Banners: Banners,
-        wishlistCount
-      
+        wishlistCount,
       });
-
     } catch (error) {
-      res.redirect('/user-error')
+      res.redirect("/user-error");
       console.log(error.message);
     }
   },
 
-
   //forgot Verify
-   forgotPasswordVerify:async(req,res)=>{
-
+  forgotPasswordVerify: async (req, res) => {
     try {
-  
-      const email=req.body.email
-      console.log("email Address from forget",email)
-      const userData=await User.findOne({email:email})
-      if(userData){
-  
-      
-        if(userData.is_verified==0){
-  
-          console.log("email is incorrect")
+      const email = req.body.email;
+      console.log("email Address from forget", email);
+      const userData = await User.findOne({ email: email });
+      if (userData) {
+        if (userData.is_verified == 0) {
+          console.log("email is incorrect");
+        } else {
+          const randomString = randomstring.generate();
+          const updatedData = await User.updateOne(
+            { email: email },
+            { $set: { token: randomString } }
+          );
+          console.log("updatessdss", updatedData);
+
+          module.exports.sendResetPasswordMail(
+            userData.name,
+            userData.email,
+            randomString
+          );
+          res.render("login", {
+            message: "please check your mail to reset your password",
+          });
         }
-        else{
-  
-          const randomString=randomstring.generate()
-          const updatedData=await User.updateOne({email:email},{$set:{token:randomString}})
-          console.log("updatessdss",updatedData)
-      
-          module.exports.sendResetPasswordMail(userData.name,userData.email, randomString)
-          res.render( 'login',{message: "please check your mail to reset your password"})
-        }
+      } else {
+        res.render("login", { message: "mail is incorrect" });
       }
-      else{
-  
-        res.render('login',{message:"mail is incorrect"})
-      }
-  
-      
     } catch (error) {
-      
-      console.log(error.messge)
+      console.log(error.messge);
     }
   },
-
 
   // Logs out the user.
   logoutUser: async (req, res) => {
@@ -284,94 +265,86 @@ verifyToLogin: async (req, res) => {
   //forget password section  loading forget password page
   forgetPasswordLoad: async (req, res) => {
     try {
-        const token = req.query.token;
-        console.log('tokeeennnnn',token)
-        const tokenData = await User.findOne({ token: token })
-        console.log('tokemmm dataaaaaaa',tokenData)
-        if (tokenData) {
-            res.render('forget-password', { user_id: tokenData._id })
-        } else {
-            res.render('404', { message: "Your token is invalid", layout: "user-layout" })
-        }
+      const token = req.query.token;
+      console.log("tokeeennnnn", token);
+      const tokenData = await User.findOne({ token: token });
+      console.log("tokemmm dataaaaaaa", tokenData);
+      if (tokenData) {
+        res.render("forget-password", { user_id: tokenData._id });
+      } else {
+        res.render("404", {
+          message: "Your token is invalid",
+          layout: "user-layout",
+        });
+      }
     } catch (error) {
-        console.log(error.message);
-        res.redirect('/user-error')
-    }
-},
-
-//reset Password
-resettingPassword: async (req, res) => {
-  try {
-      const password = req.body.password;
-      const user_id = req.body.user_id
-      const secure_password = await module.exports.securePassword(password);
-      const updatedData = await User.findByIdAndUpdate({ _id: user_id }, { $set: { password: secure_password, token: '' } })
-      res.redirect('/login')
-  } catch (error) {
       console.log(error.message);
-      res.redirect('/user-error')
-  }
-},
-
-
-//Changing password After user Logged In
-
-changinguserPassword:async(req,res)=>{
-  try {
-    
-    const newPass = req.body.newPass;
-    const confPass = req.body.confPass;
-    const userId = req.session.user_id
-
-  
-
-
-    if (newPass === confPass) {
-      const spassword = await securePassword(confPass);
-      console.log(spassword)
-
-      const result = await User.updateOne(
-        { _id: userId },
-        { $set: { password: spassword } }
-      );
-
-      res.redirect("/account");
+      res.redirect("/user-error");
     }
-  } catch (error) {
-    
-    console.log(error.message)
-  }
-},
+  },
 
+  //reset Password
+  resettingPassword: async (req, res) => {
+    try {
+      const password = req.body.password;
+      const user_id = req.body.user_id;
+      const secure_password = await module.exports.securePassword(password);
+      const updatedData = await User.findByIdAndUpdate(
+        { _id: user_id },
+        { $set: { password: secure_password, token: "" } }
+      );
+      res.redirect("/login");
+    } catch (error) {
+      console.log(error.message);
+      res.redirect("/user-error");
+    }
+  },
 
+  //Changing password After user Logged In
+
+  changinguserPassword: async (req, res) => {
+    try {
+      const newPass = req.body.newPass;
+      const confPass = req.body.confPass;
+      const userId = req.session.user_id;
+
+      if (newPass === confPass) {
+        const spassword = await securePassword(confPass);
+        console.log(spassword);
+
+        const result = await User.updateOne(
+          { _id: userId },
+          { $set: { password: spassword } }
+        );
+
+        res.redirect("/account");
+      }
+    } catch (error) {
+      console.log(error.message);
+    }
+  },
 
   // Loads the index page with products.
   loadingIndexPage: async (req, res) => {
     try {
+      var search = "";
 
-
-
-      var search='';
-        
-      if(req.query.search){
-          search=req.query.search
-
+      if (req.query.search) {
+        search = req.query.search;
       }
       const Banners = await banner.find();
 
       const products = await Product.find({
-       
-        $or:[
-          {name:{$regex:'.*'+search+'.*'}},
-          {category:{$regex:'.*'+search+'.*'}}
-
-        ]
+        $or: [
+          { name: { $regex: ".*" + search + ".*" } },
+          { category: { $regex: ".*" + search + ".*" } },
+        ],
       });
 
-      res.render("index", { products: products,Banners:Banners});
+      res.render("index", { products: products, Banners: Banners });
     } catch (error) {
       console.log(error.message);
-      res.redirect('/user-error')
+      res.redirect("/user-error");
     }
   },
 
@@ -380,11 +353,17 @@ changinguserPassword:async(req,res)=>{
     try {
       let id = req.query.id;
       const productData = await Product.findById({ _id: id });
-      const wishlistCount = await wishListHelper.getWishListCount(req.session.user_id);
+      const wishlistCount = await wishListHelper.getWishListCount(
+        req.session.user_id
+      );
 
       if (req.session.user_id) {
         const userData = await User.findById({ _id: req.session.user_id });
-        res.render("productDetails", { user: userData, product: productData,wishlistCount });
+        res.render("productDetails", {
+          user: userData,
+          product: productData,
+          wishlistCount,
+        });
       } else {
         res.render("productDetails", { product: productData, user: null });
       }
@@ -399,10 +378,10 @@ changinguserPassword:async(req,res)=>{
       const userData = await User.findById({ _id: req.session.user_id });
       const wallet = await Wallet.findOne({ userId: req.session.user_id });
 
-      res.render('Account', { user: userData, wallet: wallet });
+      res.render("Account", { user: userData, wallet: wallet });
     } catch (error) {
-      console.log(error.message)
-      res.redirect('user-error')
+      console.log(error.message);
+      res.redirect("user-error");
     }
   },
 
@@ -413,12 +392,12 @@ changinguserPassword:async(req,res)=>{
       const userData = await User.findById({ _id: req.session.user_id });
       const userAddress = await Address.findOne({ user_id: userId });
 
-      res.render('userAddresses', {
+      res.render("userAddresses", {
         user: userData,
-        userAddress: await Address.findOne({ user_id: userId })
+        userAddress: await Address.findOne({ user_id: userId }),
       });
     } catch (error) {
-      console.log(error.message)
+      console.log(error.message);
     }
   },
 
@@ -437,7 +416,6 @@ changinguserPassword:async(req,res)=>{
         userAddress: userAddress,
         myOders: userOrder,
       });
-
     } catch (error) {
       console.log(error.message);
     }
@@ -494,18 +472,20 @@ changinguserPassword:async(req,res)=>{
   // Loads the shop page with products and categories.
   loadingShop: async (req, res) => {
     try {
+      var search = "";
 
-      var search='';
-        
-      if(req.query.search){
-          search=req.query.search
-
+      if (req.query.search) {
+        search = req.query.search;
       }
-      const category = await Category.find()
-      const userData = req.session.user_id ? await User.findById(req.session.user_id) : null;
+      const category = await Category.find();
+      const userData = req.session.user_id
+        ? await User.findById(req.session.user_id)
+        : null;
       const perPage = 6;
       const currentPage = req.query.page ? parseInt(req.query.page) : 1;
-      const wishlistCount = await wishListHelper.getWishListCount(req.session.user_id);
+      const wishlistCount = await wishListHelper.getWishListCount(
+        req.session.user_id
+      );
       let products;
 
       if (req.query.category) {
@@ -514,28 +494,26 @@ changinguserPassword:async(req,res)=>{
           .limit(perPage);
       } else {
         products = await Product.find({
-       
-          $or:[
-            {name:{$regex:'.*'+search+'.*'}},
-            {category:{$regex:'.*'+search+'.*'}}
-  
-          ]
+          $or: [
+            { name: { $regex: ".*" + search + ".*" } },
+            { category: { $regex: ".*" + search + ".*" } },
+          ],
         })
           .skip((currentPage - 1) * perPage)
           .limit(perPage);
       }
 
       // Sorting
-      if (req.query.sort === 'lowToHigh') {
+      if (req.query.sort === "lowToHigh") {
         products.sort((a, b) => a.price - b.price);
-      } else if (req.query.sort === 'highToLow') {
+      } else if (req.query.sort === "highToLow") {
         products.sort((a, b) => b.price - a.price);
       }
 
       const totalProducts = await Product.countDocuments();
       const totalPages = Math.ceil(totalProducts / perPage);
 
-      res.render('shop', {
+      res.render("shop", {
         user: userData,
         category: category,
         products: products,
@@ -543,11 +521,11 @@ changinguserPassword:async(req,res)=>{
         totalPages: totalPages,
         currentPage: currentPage,
         totalProducts: totalProducts,
-        wishlistCount
+        wishlistCount,
       });
     } catch (error) {
       console.log(error.message);
-      res.redirect('/user-error')
+      res.redirect("/user-error");
     }
   },
 
@@ -556,37 +534,29 @@ changinguserPassword:async(req,res)=>{
     try {
       const userId = req.session.user_id;
       const userDetails = await User.findOne({ _id: userId });
-      res.render('404', { user: userDetails });
+      res.render("404", { user: userDetails });
     } catch (error) {
       console.log(error.message);
-      res.redirect('/user-error');
+      res.redirect("/user-error");
     }
   },
 
-  loadingCoupons:async(req,res)=>{
-
+  loadingCoupons: async (req, res) => {
     try {
-
-     const Coupon=await coupons.find()
-     const newCoupon=await newCoupons.find()
-     console.log(newCoupon)
-     console.log('newCouponsnewCoupons',newCoupons)
+      const Coupon = await coupons.find();
+      const newCoupon = await newCoupons.find();
+      console.log(newCoupon);
+      console.log("newCouponsnewCoupons", newCoupons);
 
       const userData = await User.findById({ _id: req.session.user_id });
 
+      res.render("coupons", {
+        user: userData,
 
-      res.render('coupons',{
-
-        user:userData,
-    
-        newCoupon
-      })
-  
+        newCoupon,
+      });
     } catch (error) {
-      
-      console.log(error.message)
+      console.log(error.message);
     }
-  }
-
-
+  },
 };

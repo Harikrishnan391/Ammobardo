@@ -207,8 +207,10 @@ const orderSuccess= () => {
               let createdOnIST = moment(history.createdAt)
                   .tz('Asia/Kolkata')
                   .format('DD-MM-YYYY h:mm A');
-
+                  console.log(history.user)
               return { ...history, date: createdOnIST, userName: history.user.name };
+             
+            
           });
 
           const total = await Order.aggregate([

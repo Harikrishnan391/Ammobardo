@@ -47,8 +47,8 @@ module.exports = {
         secure: false,
         requireTls: true,
         auth: {
-          user: process.env.ETHERNAL_ID,
-          pass: process.env.ETHERNAL_PASS,
+          user: process.env.FROM_EMAIL,
+          pass: process.env.MAIL_PASS,
         },
       });
       const mailOptions = {
@@ -163,7 +163,7 @@ module.exports = {
           if (passwordMatch) {
             if (user.is_verified === 0) {
               // const otp = await otpController.sendOTP(user.mobile); // Send OTP to the user's mobile number
-              const otp=await generateMail(verificationCode,email)
+              const otp = await generateMail(verificationCode, email);
               req.session.user_id = user._id;
               res.render("otp", {
                 message: "Please enter the OTP sent to your mobile number",

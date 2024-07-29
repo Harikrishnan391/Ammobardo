@@ -19,6 +19,8 @@
     />
     <!-- Template CSS -->
     <link href="../assets2/css/main.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="./assets2/css/styles.css" />
+
     <style>
       /* Style to display validation messages */
       .error-message {
@@ -30,42 +32,42 @@
 
       /* Add this CSS to your existing styles */
       .card-login {
-    box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.1); /* Add a shadow to the card */
-      padding: 20px; /* Decrease padding to reduce card size */
-      max-width: 1600px; /* Decrease max-width to reduce card size */
-      margin: 40px auto; /* Center the card horizontally */
-      overflow: hidden; /* Hide any overflowing content */
+        box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.1); /* Add a shadow to the card */
+        padding: 20px; /* Decrease padding to reduce card size */
+        max-width: 1600px; /* Decrease max-width to reduce card size */
+        margin: 40px auto; /* Center the card horizontally */
+        overflow: hidden; /* Hide any overflowing content */
       }
     </style>
   </head>
 
   <body>
-    <header class="main-header style-2 navbar">
-        <div class="col-brand">
-          <a href="index.html" class="brand-wrap">
-            <img
-              src="../assets2/imgs/theme/logo2.svg"
-              class="logo"
-              alt="Mobardo"
-            />
-          </a>
-        </div>
-        <div class="col-nav">
-          <ul class="nav">
-            <li class="nav-item">
-              <a class="nav-link btn-icon darkmode" href="#">
-                <i class="material-icons md-nights_stay"></i>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a href="#" class="requestfullscreen nav-link btn-icon"
-                ><i class="material-icons md-cast"></i
-              ></a>
-            </li>
-          </ul>
-        </div>
-      </header>
-    <main>
+    <!-- <header class="main-header style-2 navbar">
+      <div class="col-brand">
+        <a href="index.html" class="brand-wrap">
+          <img
+            src="../assets2/imgs/theme/logo2.svg"
+            class="logo"
+            alt="Mobardo"
+          />
+        </a>
+      </div>
+      <div class="col-nav">
+        <ul class="nav">
+          <li class="nav-item">
+            <a class="nav-link btn-icon darkmode" href="#">
+              <i class="material-icons md-nights_stay"></i>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="#" class="requestfullscreen nav-link btn-icon"
+              ><i class="material-icons md-cast"></i
+            ></a>
+          </li>
+        </ul>
+      </div>
+    </header> -->
+    <!-- <main>
     
       <section class="vh-100" style="background-color: #eee">
         <div class="container h-100">
@@ -243,7 +245,89 @@
           </div>
         </div>
       </section>
+
+   
+    
+    </main> -->
+
+    <main class="card-container slideUp-animation">
+      <div class="image-container">
+        <h1 class="company"> <sup>&trade;</sup></h1>
+        <img src="../assets2/imgs/theme/signedUp.svg" class="illustration" alt="" />
+        <p class="quote">Sign up today to get exciting offers..!</p>
+        <a href="#btm" class="mobile-btm-nav">
+          <img src="./assets2/imgs/theme/signedUp.svg" alt="" />
+        </a>
+      </div>
+      <form action="" method="">
+        <div class="form-container slideRight-animation">
+          <h1 class="form-header">Get started</h1>
+
+          <div class="input-container">
+            <label for="f-name"></label>
+            <input type="text" name="f-name" id="f-name" required />
+            <span> First name </span>
+            <div class="error"></div>
+          </div>
+
+          <div class="input-container">
+            <label for="l-name"></label>
+            <input type="text" name="l-name" id="l-name" required />
+            <span> Last name </span>
+            <div class="error"></div>
+          </div>
+
+          <div class="input-container">
+            <label for="mail"> </label>
+            <input type="email" name="mail" id="mail" required />
+            <span> E-mail </span>
+            <div class="error"></div>
+          </div>
+
+          <div class="input-container">
+            <label for="phone"> </label>
+            <input type="tel" name="phone" id="phone" required />
+            <span>Phone</span>
+            <div class="error"></div>
+          </div>
+
+          <div class="input-container">
+            <label for="user-password"></label>
+            <input
+              type="password"
+              name="user-password"
+              id="user-password"
+              class="user-password"
+              required
+            />
+            <span>Password</span>
+            <div class="error"></div>
+          </div>
+
+          <div class="input-container">
+            <label for="user-password-confirm"></label>
+            <input
+              type="password"
+              name="user-password-confirm"
+              id="user-password-confirm"
+              class="password-confirmation"
+              required
+            />
+            <span> Confirm Password </span>
+            <div class="error"></div>
+          </div>
+
+          <div id="btm">
+            <button type="submit" class="submit-btn">Create Account</button>
+            <p class="btm-text">
+              Already have an account..?
+              <span class="btm-text-highlighted"> Log in</span>
+            </p>
+          </div>
+        </div>
+      </form>
     </main>
+
     <script src="../assets2/js/vendors/jquery-3.6.0.min.js"></script>
     <script src="../assets2/js/vendors/bootstrap.bundle.min.js"></script>
     <script src="../assets2/js/vendors/jquery.fullscreen.min.js"></script>

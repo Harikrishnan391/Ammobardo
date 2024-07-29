@@ -146,6 +146,7 @@ module.exports = {
       const user = await User.findOne({ email: email });
       console.log(user);
       const verificationCode = user.otp;
+      console.log(verificationCode,"verification code")
 
       console.log(verificationCode);
 

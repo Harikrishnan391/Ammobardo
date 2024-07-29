@@ -252,78 +252,115 @@
 
     <main class="card-container slideUp-animation">
       <div class="image-container">
-        <h1 class="company"> <sup>&trade;</sup></h1>
-        <img src="../assets2/imgs/theme/signedUp.svg" class="illustration" alt="" />
+        <h1 class="company"><sup>&trade;</sup></h1>
+        <img
+          src="../assets2/imgs/theme/signedUp.svg"
+          class="illustration"
+          alt=""
+        />
         <p class="quote">Sign up today to get exciting offers..!</p>
         <a href="#btm" class="mobile-btm-nav">
           <img src="./assets2/imgs/theme/signedUp.svg" alt="" />
         </a>
       </div>
-      <form action="" method="">
+      <form
+        action=""
+        method="post"
+        enctype="multipart/form-data"
+        onsubmit="return validateForm()"
+      >
         <div class="form-container slideRight-animation">
           <h1 class="form-header">Get started</h1>
 
           <div class="input-container">
             <label for="f-name"></label>
-            <input type="text" name="f-name" id="f-name" required />
+            <input
+              type="text"
+              id="name"
+              name="name"
+              onkeyup="validateForm()"
+              required
+            />
             <span> First name </span>
-            <div class="error"></div>
+            <div class="error-message" id="nameError"></div>
           </div>
 
-          <div class="input-container">
+          <!-- <div class="input-container">
             <label for="l-name"></label>
             <input type="text" name="l-name" id="l-name" required />
             <span> Last name </span>
             <div class="error"></div>
+          </div> -->
+
+          <div class="input-container">
+            <label for="mail"></label>
+            <input
+              type="email"
+              name="email"
+              id="emailInput"
+              oninput="validateEmail()"
+              required
+            />
+            <span> E-mail </span>
+            <div class="error-message" id="emailError"></div>
           </div>
 
           <div class="input-container">
             <label for="mail"> </label>
-            <input type="email" name="mail" id="mail" required />
-            <span> E-mail </span>
-            <div class="error"></div>
+            <input name="image" type="file" required />
+            <span>Add YOUR PHOTO</span>
           </div>
 
           <div class="input-container">
             <label for="phone"> </label>
-            <input type="tel" name="phone" id="phone" required />
+            <input
+              type="tel"
+              id="phone"
+              name="mno"
+              oninput="validatePhoneNumber()"
+              required
+            />
             <span>Phone</span>
-            <div class="error"></div>
+            <div class="error-message" id="emailError"></div>
           </div>
 
           <div class="input-container">
             <label for="user-password"></label>
             <input
               type="password"
-              name="user-password"
-              id="user-password"
-              class="user-password"
+              id="form3Example4c"
+              oninput="validatePassword()"
+              name="password"
               required
             />
             <span>Password</span>
-            <div class="error"></div>
+            <div class="error-message" id="passwordError"></div>
           </div>
 
           <div class="input-container">
             <label for="user-password-confirm"></label>
             <input
               type="password"
-              name="user-password-confirm"
-              id="user-password-confirm"
-              class="password-confirmation"
+              id="form3Example4cd"
+              name="confirmpassword"
+              oniput="validateConfirmPassword()"
               required
             />
             <span> Confirm Password </span>
-            <div class="error"></div>
+            <div class="error-message" id="confirmPasswordError"></div>
           </div>
-
           <div id="btm">
             <button type="submit" class="submit-btn">Create Account</button>
             <p class="btm-text">
               Already have an account..?
-              <span class="btm-text-highlighted"> Log in</span>
+              <a href="/login">
+                <span class="btm-text-highlighted"> Log in</span></a
+              >
             </p>
           </div>
+          <p style="color: green" class="text-center mb-2 flex">
+            <%=(typeof message!=='undefined')?message:""%>
+          </p>
         </div>
       </form>
     </main>

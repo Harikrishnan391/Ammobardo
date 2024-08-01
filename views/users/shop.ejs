@@ -244,33 +244,4 @@
 
 
 </script>
-
-<!-- <script>
-    function addToCart(proId) {
-          $.ajax({
-            url: '/add-cart/' + proId,
-            method: 'POST',
-            success: (response) => {
-                console.log(response,"response")
-              if (response.status==true) {
-                Swal.fire({
-                  title: 'Added To Cart',
-                  text: 'Your Product has been added to Cart',
-                  icon: 'success',
-                  timer: 5000,
-                })
-              }else{
-              
-                Swal.fire({
-                    title: 'Error',
-                    text: 'An error occurred while adding the product to the cart.',
-                    icon: 'error',
-                    timer: 5000,
-                });
-    
-              }
-            }
-          })
-        }
-    </script> -->
 <%-include('../layouts/footer.ejs')%>

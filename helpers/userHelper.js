@@ -17,6 +17,7 @@ const generateOtp = require("../util/generateOtp");
 const generateMail = require("../util/generateMail");
 const randomstring = require("randomstring");
 const Cart = require("../models/cartModel");
+const e = require("express");
 require("dotenv").config();
 
 module.exports = {
@@ -355,8 +356,9 @@ module.exports = {
           { category: { $regex: ".*" + search + ".*" } },
         ],
       });
+      let cartCount = 0;
 
-      res.render("index", { products: products, Banners: Banners });
+      res.render("index", { products: products, Banners: Banners, cartCount });
     } catch (error) {
       console.log(error.message);
       res.redirect("/user-error");
@@ -364,30 +366,72 @@ module.exports = {
   },
 
   // Displays details of a single product.
+  // singleProductView: async (req, res) => {
+  //   try {
+  //     let id = req.query.id;
+  //     const productData = await Product.findById({ _id: id });
+  //     const wishlistCount = await wishListHelper.getWishListCount(
+  //       req.session.user_id
+  //     );
+
+  //     const userData = await User.findById({ _id: req.session.user_id });
+  //     let cart = await Cart.findOne({ user: userData._id });
+  //     let cartCount = cart ? cart.products.length : 0;
+
+  //     if (req.session.user_id) {
+  //       res.render("productDetails", {
+  //         user: userData,
+  //         product: productData,
+  //         wishlistCount,
+  //         cartCount,
+  //       });
+  //     } else {
+  //       res.render("productDetails", { product: productData, user: null });
+  //     }
+  //   } catch (error) {
+  //     console.log(error,"error")
+  //     console.log(error.message);
+  //   }
+  // },
+
   singleProductView: async (req, res) => {
     try {
       let id = req.query.id;
-      const productData = await Product.findById({ _id: id });
+      if (!id) {
+        return res.status(400).send("Product ID is required");
+      }
+      const productData = await Product.findById(id);
+      if (!productData) {
+        return res.status(404).send("Product not found");
+      }
+      let cartCount = 0;
+
+      if (!req.session.user_id) {
+        return res.render("productDetails", {
+          product: productData,
+          user: null,
+          cartCount,
+        });
+      }
+
+      const userData = await User.findById(req.session.user_id);
+      if (!userData) {
+        return res.status(404).send("User not found");
+      }
+
       const wishlistCount = await wishListHelper.getWishListCount(
         req.session.user_id
       );
 
-      const userData = await User.findById({ _id: req.session.user_id });
-      let cart = await Cart.findOne({ user: userData._id });
-      let cartCount = cart ? cart.products.length : 0;
-
-      if (req.session.user_id) {
-        res.render("productDetails", {
-          user: userData,
-          product: productData,
-          wishlistCount,
-          cartCount,
-        });
-      } else {
-        res.render("productDetails", { product: productData, user: null });
-      }
+      res.render("productDetails", {
+        user: userData,
+        product: productData,
+        wishlistCount,
+        cartCount,
+      });
     } catch (error) {
-      console.log(error.message);
+      console.log("Error in singleProductView:", error);
+      res.status(500).send("Internal Server Error");
     }
   },
 
@@ -489,6 +533,81 @@ module.exports = {
   },
 
   // Loads the shop page with products and categories.
+  // loadingShop: async (req, res) => {
+  //   try {
+  //     var search = "";
+
+  //     if (req.query.search) {
+  //       search = req.query.search;
+  //     }
+  //     const category = await Category.find();
+  //     const userData = req.session.user_id
+  //       ? await User.findById(req.session.user_id)
+  //       : null;
+  //     const perPage = 6;
+  //     const currentPage = req.query.page ? parseInt(req.query.page) : 1;
+  //     const wishlistCount = await wishListHelper.getWishListCount(
+  //       req.session.user_id
+  //     );
+  //     let products;
+
+  //     let cart = await Cart.findOne({ user: userData._id }).populate(
+  //       "products.productId"
+  //     );
+  //     let cartCount = cart ? cart.products.length : 0;
+
+  //     if (req.query.category) {
+  //       products = await Product.find({ category: req.query.category })
+  //         .skip((currentPage - 1) * perPage)
+  //         .limit(perPage);
+  //     } else {
+  //       products = await Product.find({
+  //         $or: [
+  //           { name: { $regex: ".*" + search + ".*" } },
+  //           { category: { $regex: ".*" + search + ".*" } },
+  //         ],
+  //       })
+  //         .skip((currentPage - 1) * perPage)
+  //         .limit(perPage);
+  //     }
+
+  //     // Sorting
+  //     if (req.query.sort === "lowToHigh") {
+  //       products.sort((a, b) => a.price - b.price);
+  //     } else if (req.query.sort === "highToLow") {
+  //       products.sort((a, b) => b.price - a.price);
+  //     }
+
+  //     const totalProducts = await Product.countDocuments();
+  //     const totalPages = Math.ceil(totalProducts / perPage);
+
+  //     if (userData) {
+  //       res.render("shop", {
+  //         user: userData,
+  //         category: category,
+  //         products: products,
+  //         req: req,
+  //         totalPages: totalPages,
+  //         currentPage: currentPage,
+  //         totalProducts: totalProducts,
+  //         wishlistCount,
+  //         cartCount,
+  //       });
+  //     } else {
+  //       res.render("shop", {
+  //         category: category,
+  //         products: products,
+  //         totalPages: totalPages,
+  //         currentPage: currentPage,
+  //         totalProducts: totalProducts,
+  //       });
+  //     }
+  //   } catch (error) {
+  //     console.log(error);
+  //     res.redirect("/user-error");
+  //   }
+  // },
+
   loadingShop: async (req, res) => {
     try {
       var search = "";
@@ -500,17 +619,22 @@ module.exports = {
       const userData = req.session.user_id
         ? await User.findById(req.session.user_id)
         : null;
+
       const perPage = 6;
       const currentPage = req.query.page ? parseInt(req.query.page) : 1;
-      const wishlistCount = await wishListHelper.getWishListCount(
-        req.session.user_id
-      );
-      let products;
+      const wishlistCount = userData
+        ? await wishListHelper.getWishListCount(req.session.user_id)
+        : 0;
 
-      let cart = await Cart.findOne({ user: userData._id }).populate(
-        "products.productId"
-      );
-      let cartCount = cart ? cart.products.length : 0;
+      let products;
+      let cartCount = 0;
+
+      if (userData) {
+        let cart = await Cart.findOne({ user: userData._id }).populate(
+          "products.productId"
+        );
+        cartCount = cart ? cart.products.length : 0;
+      }
 
       if (req.query.category) {
         products = await Product.find({ category: req.query.category })
@@ -537,19 +661,24 @@ module.exports = {
       const totalProducts = await Product.countDocuments();
       const totalPages = Math.ceil(totalProducts / perPage);
 
-      res.render("shop", {
-        user: userData,
+      const renderData = {
         category: category,
         products: products,
-        req: req,
         totalPages: totalPages,
         currentPage: currentPage,
         totalProducts: totalProducts,
         wishlistCount,
         cartCount,
-      });
+        req:req
+      };
+
+      if (userData) {
+        renderData.user = userData;
+      }
+
+      res.render("shop", renderData,user="");
     } catch (error) {
-      console.log(error.message);
+      console.log(error);
       res.redirect("/user-error");
     }
   },

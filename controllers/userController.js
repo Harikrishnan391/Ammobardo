@@ -276,43 +276,28 @@ const loadAboutPage = async (req, res) => {
       ? await User.findById(req.session.user_id)
       : null;
 
-    let cart = await Cart.findOne({ user: userData._id }).populate(
-      "products.productId"
-    );
-    let cartCount = cart ? cart.products.length : 0;
-    const wishlistCount = await wishListHelper.getWishListCount(
-      req.session.user_id
-    );
+    let cartCount = 0;
+    let wishlistCount = 0;
+
+    if (userData) {
+      const cart = await Cart.findOne({ user: userData._id }).populate(
+        "products.productId"
+      );
+      cartCount = cart ? cart.products.length : 0;
+      wishlistCount = await wishListHelper.getWishListCount(
+        req.session.user_id
+      );
+    }
+
     res.render("about", { wishlistCount, user: userData, cartCount });
   } catch (error) {
+    console.log(error);
     console.log(error.message);
+    res.redirect("/user-error"); // Add error handling to redirect or display error page
   }
 };
 
 /* ====================================================== */
-
-// edit info
-
-// const editInfo = async (req, res) => {
-//   try {
-
-//    const userId=req.session.user_id
-
-//     const{name,email,mobile}=req.body
-
-//     const result=await User.updateOne(
-
-//       {_id:userId},{$set:{name:name,email:email,mobile:mobile}}
-//     )
-
-//     res.redirect('/account')
-
-//   } catch (error) {
-//     console.log(error.message);
-//   }
-
-// };
-
 //editPassword
 const editPassword = async (req, res) => {
   try {

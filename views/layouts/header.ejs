@@ -62,9 +62,9 @@
                         <div class="text-center">
                             <div id="news-flash" class="d-inline-block">
                                 <ul>
-                                    <li>Get great devices up to 50% off <a href="shop-grid-right.html">View details</a></li>
+                                    <li>Get great devices up to 50% off <a href="/shop">View details</a></li>
                                     <li>Supper Value Deals - Save more with coupons</li>
-                                    <li>Trendy  watches  save up 35% off today <a href="shop-grid-right.html">Shop now</a></li>
+                                    <li>Trendy  watches  save up 35% off today <a href="/shop">Shop now</a></li>
                                 </ul>
                             </div>
                         </div>
@@ -102,6 +102,7 @@
                         <div class="header-action-right">
                             <div class="header-action-2">
                                 <div class="header-action-icon-2">
+                                   <%if(user){%>
                                     <a href="/wishList">
                                         <img class="svgInject" alt="Evara" src="../assets/imgs/theme/icons/icon-heart.svg">
                                         <%if(user){%>
@@ -110,16 +111,40 @@
                                             <span class="pro-count blue" id="wishListCount">0</span>
                                         <%}%>
                                     </a>
-                                </div>
-                                <div class="header-action-icon-2">
-                                    <a class="mini-cart-icon" href="/viewcart">
-                                        <img alt="Evara" src="../assets/imgs/theme/icons/icon-cart.svg">
-                                        <%if(cartCount){%>
-                                            <span class="pro-count blue"  id="cartItemCount"><%=cartCount%></span>
+                                   <%}else{%>
+                                    <a href="/login">
+                                        <img class="svgInject" alt="Evara" src="../assets/imgs/theme/icons/icon-heart.svg">
+                                        <%if(user){%>
+                                            <span class="pro-count blue" id="wishListCount"><%=wishlistCount%></span>
                                         <%}else{%>
-                                            <span class="pro-count blue"  id="cartItemCount">0</span>
+                                            <span class="pro-count blue" id="wishListCount">0</span>
                                         <%}%>
                                     </a>
+
+                                    <%}%>
+
+                                </div>
+                                <div class="header-action-icon-2">
+                                    <%if(user){%>
+                                        <a class="mini-cart-icon" href="/viewcart">
+                                            <img alt="Evara" src="../assets/imgs/theme/icons/icon-cart.svg">
+                                            <%if(cartCount){%>
+                                                <span class="pro-count blue"  id="cartItemCount"><%=cartCount%></span>
+                                            <%}else{%>
+                                                <span class="pro-count blue"  id="cartItemCount">0</span>
+                                            <%}%>
+                                        </a>
+
+                                        <%}else{%>
+                                            <a class="mini-cart-icon" href="/login">
+                                                <img alt="Evara" src="../assets/imgs/theme/icons/icon-cart.svg">
+                                                <%if(cartCount){%>
+                                                    <span class="pro-count blue"  id="cartItemCount"><%=cartCount%></span>
+                                                <%}else{%>
+                                                    <span class="pro-count blue"  id="cartItemCount">0</span>
+                                                <%}%>
+                                            </a>
+                                     <%}%>
                                 </div>
                             </div>
                         </div>

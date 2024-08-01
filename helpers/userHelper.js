@@ -16,6 +16,7 @@ const wishListHelper = require("../helpers/wishListHelper");
 const generateOtp = require("../util/generateOtp");
 const generateMail = require("../util/generateMail");
 const randomstring = require("randomstring");
+const Cart = require("../models/cartModel");
 require("dotenv").config();
 
 module.exports = {
@@ -146,7 +147,7 @@ module.exports = {
       const user = await User.findOne({ email: email });
       console.log(user);
       const verificationCode = user.otp;
-      console.log(verificationCode,"verification code")
+      console.log(verificationCode, "verification code");
 
       console.log(verificationCode);
 
@@ -167,7 +168,7 @@ module.exports = {
               const otp = await generateMail(verificationCode, email);
               req.session.user_id = user._id;
               res.render("otp", {
-                message: "Please enter the OTP sent to your mobile number",
+                message: `Please enter the OTP sent to your email- ${email}`,
               });
             } else {
               req.session.user_id = user._id;
@@ -199,12 +200,24 @@ module.exports = {
           { category: { $regex: ".*" + search + ".*" } },
         ],
       });
+
       const category = await Category.find({ unlist: false });
       const userData = await User.findById({ _id: req.session.user_id });
+      console.log(userData, "userData");
       const Banners = await banner.find();
       const wishlistCount = await wishListHelper.getWishListCount(
         req.session.user_id
       );
+
+      let cart = await Cart.findOne({ user: userData._id }).populate(
+        "products.productId"
+      );
+
+      console.log(cart);
+      let cartCount = cart ? cart.products.length : 0;
+
+      if (!cart) {
+      }
 
       res.render("home", {
         user: userData,
@@ -212,10 +225,11 @@ module.exports = {
         category: category,
         Banners: Banners,
         wishlistCount,
+        cartCount,
       });
     } catch (error) {
       res.redirect("/user-error");
-      console.log(error.message);
+      console.log(error, "this error");
     }
   },
 
@@ -358,12 +372,16 @@ module.exports = {
         req.session.user_id
       );
 
+      const userData = await User.findById({ _id: req.session.user_id });
+      let cart = await Cart.findOne({ user: userData._id });
+      let cartCount = cart ? cart.products.length : 0;
+
       if (req.session.user_id) {
-        const userData = await User.findById({ _id: req.session.user_id });
         res.render("productDetails", {
           user: userData,
           product: productData,
           wishlistCount,
+          cartCount,
         });
       } else {
         res.render("productDetails", { product: productData, user: null });
@@ -489,6 +507,11 @@ module.exports = {
       );
       let products;
 
+      let cart = await Cart.findOne({ user: userData._id }).populate(
+        "products.productId"
+      );
+      let cartCount = cart ? cart.products.length : 0;
+
       if (req.query.category) {
         products = await Product.find({ category: req.query.category })
           .skip((currentPage - 1) * perPage)
@@ -523,6 +546,7 @@ module.exports = {
         currentPage: currentPage,
         totalProducts: totalProducts,
         wishlistCount,
+        cartCount,
       });
     } catch (error) {
       console.log(error.message);

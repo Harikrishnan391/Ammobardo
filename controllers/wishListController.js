@@ -1,6 +1,7 @@
 const User = require("../models/userModel");
 const wishListModel = require("../models/wishListModel");
 const wishListHelper = require("../helpers/wishListHelper");
+const Cart = require("../models/cartModel");
 const { ObjectId } = require("mongodb");
 
 const loadWishList = async (req, res) => {
@@ -12,7 +13,16 @@ const loadWishList = async (req, res) => {
 
     const wishListProduct = await wishListHelper.getWishListProducts(userId);
 
-    res.render("wishList", { user: userData, wishListProduct, wishlistCount });
+    let cart = await Cart.findOne({ user: userData._id });
+
+    let cartCount = cart ? cart.products.length : 0;
+
+    res.render("wishList", {
+      user: userData,
+      wishListProduct,
+      wishlistCount,
+      cartCount,
+    });
   } catch (error) {
     console.log(error.message);
     res.redirect("/user-error");
@@ -28,6 +38,13 @@ const addWishList = async (req, res) => {
     let userWishList = await wishListModel.findOne({
       user: new ObjectId(userId),
     });
+
+    const wishlistCount = await wishListHelper.getWishListCount(userId);
+
+    let cart = await Cart.findOne({ user: userId });
+    let cartCount = cart ? cart.products.length : 0;
+
+    console.log(userWishList);
 
     if (userWishList) {
       let productExist = userWishList.wishList.findIndex(
@@ -45,7 +62,7 @@ const addWishList = async (req, res) => {
             },
           }
         );
-        res.send({ status: true });
+        res.json({ status: true, cartCount, wishlistCount });
       }
     } else {
       let wishListData = {
@@ -54,7 +71,8 @@ const addWishList = async (req, res) => {
       };
       let newWishList = new wishListModel(wishListData);
       await newWishList.save();
-      res.send({ status: true });
+
+      res.json({ status: true, cartCount, wishlistCount });
     }
   } catch (error) {
     console.log(error.message);

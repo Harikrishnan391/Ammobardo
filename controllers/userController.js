@@ -11,6 +11,7 @@ const Order = require("../models/orderModel");
 const randomstring = require("randomstring");
 const userHelper = require("../helpers/userHelper");
 const wishListHelper = require("../helpers/wishListHelper");
+const Cart = require("../models/cartModel");
 
 const securePassword = async (password) => {
   try {
@@ -225,6 +226,10 @@ const orderSucess = async (req, res) => {
     const wishlistCount = await wishListHelper.getWishListCount(
       req.session.user_id
     );
+    let cart = await Cart.findOne({ user: userData._id }).populate(
+      "products.productId"
+    );
+    let cartCount = cart ? cart.products.length : 0;
 
     const orders = await Order.find({ user: userId }).exec();
 
@@ -232,6 +237,7 @@ const orderSucess = async (req, res) => {
       user: userData,
       orders: orders,
       wishlistCount: wishlistCount,
+      cartCount,
     });
   } catch (error) {
     console.log(error.message);
@@ -269,10 +275,15 @@ const loadAboutPage = async (req, res) => {
     const userData = req.session.user_id
       ? await User.findById(req.session.user_id)
       : null;
+
+    let cart = await Cart.findOne({ user: userData._id }).populate(
+      "products.productId"
+    );
+    let cartCount = cart ? cart.products.length : 0;
     const wishlistCount = await wishListHelper.getWishListCount(
       req.session.user_id
     );
-    res.render("about", { wishlistCount, user: userData });
+    res.render("about", { wishlistCount, user: userData, cartCount });
   } catch (error) {
     console.log(error.message);
   }

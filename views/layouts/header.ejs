@@ -16,7 +16,25 @@
     <!-- Favicon -->
    <a> <link rel="shortcut icon" type="image/x-icon" href="../assets/imgs/theme/logo2.svg"></a>
     <!-- Template CSS -->
-        <link rel="stylesheet" href="../assets/css/main.css">  
+    <link rel="stylesheet" href="../assets/css/main.css">  
+
+    <style>
+        .main-menu nav {
+          display: flex;
+          justify-content: flex-end; /* Aligns the content to the right */
+        }
+  
+        .header-menu {
+          list-style: none;
+          margin: 0;
+          padding: 0;
+          display: flex;
+        }
+  
+        .header-menu > li {
+          margin-left: 50px; /* Adjust the spacing between menu items */
+        }
+      </style>
      
 </head>
 
@@ -87,16 +105,20 @@
                                     <a href="/wishList">
                                         <img class="svgInject" alt="Evara" src="../assets/imgs/theme/icons/icon-heart.svg">
                                         <%if(user){%>
-                                            <span class="pro-count blue"><%=wishlistCount%></span>
+                                            <span class="pro-count blue" id="wishListCount"><%=wishlistCount%></span>
                                         <%}else{%>
-                                            <span class="pro-count blue">0</span>
+                                            <span class="pro-count blue" id="wishListCount">0</span>
                                         <%}%>
                                     </a>
                                 </div>
                                 <div class="header-action-icon-2">
                                     <a class="mini-cart-icon" href="/viewcart">
                                         <img alt="Evara" src="../assets/imgs/theme/icons/icon-cart.svg">
-                                        <span class="pro-count blue"  id="cartItemCount">0</span>
+                                        <%if(cartCount){%>
+                                            <span class="pro-count blue"  id="cartItemCount"><%=cartCount%></span>
+                                        <%}else{%>
+                                            <span class="pro-count blue"  id="cartItemCount">0</span>
+                                        <%}%>
                                     </a>
                                 </div>
                             </div>
@@ -117,32 +139,26 @@
                                 <span class="fi-rs-apps"></span> Next Generation
                             </a>
                             </div>
-                        <div class="main-menu main-menu-padding-1 main-menu-lh-2 d-none d-lg-block ">
+                        <div class="main-menu main-menu-padding-1 main-menu-lh-2 d-none d-lg-block">
                             <nav>
-                                <ul>
-                                    <% if (user ) { %>
-                                        <li><a class="active" href="/home">Home </i></a>
-                                      <% } else { %>
-                                        <li><a class="active" href="/index">Home </i></a>
-                                      <% } %>
-                                  
+                                <ul class="header-menu">
+                                    <% if (user) { %>
+                                        <li><a class="active" href="/home">Home</a></li>
+                                    <% } else { %>
+                                        <li><a class="active" href="/index">Home</a></li>
+                                    <% } %>
+                                    <li><a href="/about">About</a></li>
+                                    <li><a href="/shop">Shop</a></li>
                                     <li>
-                                        <a href="/about">About</a>
-                                    </li>
-                                    <li><a href="/shop">Shop </i></a>
-                                  
-                                    <li><a href="#">More <i class="fi-rs-angle-down"></i></a>
+                                        <a href="#">More <i class="fi-rs-angle-down"></i></a>
                                         <ul class="sub-menu">
                                             <li><a href="/account">Account</a></li>
-                                            
-                                
-                                          
-                                           
                                         </ul>
-                                    </li> 
+                                    </li>
                                 </ul>
                             </nav>
-                        </div>
+                        </div>                        
+                      
                     </div>
                     <div class="hotline d-none d-lg-block">
                         <p><i class="fi-rs-headset"></i><span>Hotline</span> 1900 - 888 </p>
@@ -197,6 +213,10 @@
             </div>
         </div>
     </div>
+
+    <script>
+
+    </script>
 
     
 

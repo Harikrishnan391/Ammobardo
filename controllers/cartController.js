@@ -5,7 +5,17 @@ const Address = require("../models/addressModel");
 const Order = require("../models/orderModel");
 const wishListHelper = require("../helpers/wishListHelper");
 const Wallet = require("../models/walletModel");
-const couponHelpers = require('../helpers/couponHelperN')
+const couponHelpers = require("../helpers/couponHelperN");
+
+async function getUpdatedCartCount(userId) {
+  try {
+    const cart = await Cart.findOne({ userId });
+
+    return cart ? cart.items.length : 0;
+  } catch (error) {
+    console.log("Error fetching cart count", error);
+  }
+}
 
 const addCart = async (req, res) => {
   try {
@@ -59,7 +69,13 @@ const addCart = async (req, res) => {
 
     await Promise.all([cart.save(), product.save()]);
 
-    res.send({ status: true, newStock: product.stock });
+    const updatedCartCount = cart.products.length;
+
+    res.send({
+      status: true,
+      newStock: product.stock,
+      cartCount: updatedCartCount,
+    });
   } catch (error) {
     console.log(error.message);
   }
@@ -74,16 +90,17 @@ const loadCart = async (req, res) => {
     let cart = await Cart.findOne({ user: userData._id }).populate(
       "products.productId"
     );
-
+    let cartCount = cart ? cart.products.length : 0;
     if (cart) {
       let products = cart.products;
       res.render("userCart", {
         user: userData,
         products: products,
         wishlistCount,
+        cartCount,
       });
     } else {
-      res.render("userCart", { user: userData, products: null, wishlistCount });
+      res.render("userCart", { user: userData, products: null, wishlistCount,cartCount });
     }
   } catch (error) {
     console.log(error.message);
@@ -190,6 +207,7 @@ const checkoutLoad = async (req, res) => {
       "products.productId"
     );
 
+    let cartCount = cart.products.length;
     const wishlistCount = await wishListHelper.getWishListCount(userId);
 
     const walletDetails = await Wallet.findOne({ userId: userId }).lean();
@@ -205,33 +223,31 @@ const checkoutLoad = async (req, res) => {
       delete req.session.couponApplied;
     }
 
-  
     const total = cart.products.reduce(
       (sum, product) => sum + Number(product.subtotal),
       0
-   );
+    );
 
-      let couponDiscount = 0;
+    let couponDiscount = 0;
 
-     const eligibleCoupon = await couponHelpers.checkCurrentCouponValidityStatus(userId, total);
+    const eligibleCoupon = await couponHelpers.checkCurrentCouponValidityStatus(
+      userId,
+      total
+    );
 
-     if (eligibleCoupon.status) {
-         couponDiscount = eligibleCoupon.couponDiscount;
-     } else {
-         couponDiscount = 0;
-     }
+    if (eligibleCoupon.status) {
+      couponDiscount = eligibleCoupon.couponDiscount;
+    } else {
+      couponDiscount = 0;
+    }
 
-     // total amount by reducing offer price
+    // total amount by reducing offer price
 
-     let TotalAmount  = total- couponDiscount
+    let TotalAmount = total - couponDiscount;
 
-     console.log(TotalAmount,'TotalAmount')
+    console.log(TotalAmount, "TotalAmount");
 
-   
-
-
-    if (cart.products.length > 0 && UserData.blocked==false ) {
-     
+    if (cart.products.length > 0 && UserData.blocked == false) {
       let products = cart.products;
       res.render("checkOut", {
         user: UserData,
@@ -243,17 +259,16 @@ const checkoutLoad = async (req, res) => {
         walletDetails,
         total,
         couponDiscount,
-        TotalAmount:TotalAmount,
-      
-
+        TotalAmount: TotalAmount,
+        cartCount,
       });
       delete req.session.couponApplied;
     } else {
-      res.redirect('/user-error')
+      res.redirect("/user-error");
     }
   } catch (error) {
     console.log(error.message);
-    res.redirect('/user-error')
+    res.redirect("/user-error");
   }
 };
 

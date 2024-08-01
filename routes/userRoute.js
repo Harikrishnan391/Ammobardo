@@ -15,6 +15,7 @@
  const profileController=require('../controllers/profileController')
  const wishListController=require('../controllers/wishListController')
  const couponControllerN=require('../controllers/couponControllerN')
+ const wishListHelper=require('../helpers/wishListHelper')
 
 
   const user_route = express();
@@ -90,6 +91,7 @@
 
 
 user_route.get('/wishList',wishListController.loadWishList)
+user_route.get('/get-wishlist-count',wishListHelper.getWishListCount)
 user_route.post('/add-to-wishlist',auth.isLogin,wishListController.addWishList)
 user_route.delete('/remove-product-wishlist',wishListController.removeProductWishlist) 
 user_route.get('/viewOrder',profileController.loadOrderSlip)
